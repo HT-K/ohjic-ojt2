@@ -4,26 +4,26 @@
  * Created by PhpStorm.
  * User: ohjic
  * Date: 2016-06-16
- * Time: ¿ÀÈÄ 1:26
+ * Time: ì˜¤í›„ 1:26
  */
 class Board_model extends CI_Model
 {
-    function __construct() { // »ý¼ºÀÚ´Ù, ÃÊ±âÈ­¿Í °ü·ÃµÈ ÇÔ¼ö´Ù.
+    function __construct() { // ìƒì„±ìžë‹¤, ì´ˆê¸°í™”ì™€ ê´€ë ¨ëœ í•¨ìˆ˜ë‹¤.
         parent::__construct();
     }
 
     public function listAll()
     {
-        /* board Å×ÀÌºí¿¡¼­ °Ô½Ã±ÛµéÀ» ¾ò¾î¿Íº¸ÀÚ */
+        /* board í…Œì´ë¸”ì—ì„œ ê²Œì‹œê¸€ë“¤ì„ ì–»ì–´ì™€ë³´ìž */
         return $this->db->query('SELECT * FROM board')->result();
     }
 
     public function listArticle($startRow, $articleSize)
     {
-        ///* board Å×ÀÌºí¿¡¼­ °Ô½Ã±ÛµéÀ» ¾ò¾î¿Íº¸ÀÚ */
+        ///* board í…Œì´ë¸”ì—ì„œ ê²Œì‹œê¸€ë“¤ì„ ì–»ì–´ì™€ë³´ìž */
         //return $this->db->query('SELECT * FROM board')->result();
 
-        /* board Å×ÀÌºí¿¡¼­ °³¼ö(articleSize) , ½ÃÀÛÀ§Ä¡ °Ô½Ã±Û(startRow) */
+        /* board í…Œì´ë¸”ì—ì„œ ê°œìˆ˜(articleSize) , ì‹œìž‘ìœ„ì¹˜ ê²Œì‹œê¸€(startRow) */
         return $this->db->get('board', $articleSize, $startRow)->result();
 
         //return $this->db->query('SELECT * FROM board LIMIT 0, 3')->result();
@@ -32,14 +32,17 @@ class Board_model extends CI_Model
 
     public function listCount()
     {
-        /* board Å×ÀÌºíÀÇ row¸¦ Ä«¿îÆ®ÇØ¼­ ¸®ÅÏÇØÁØ´Ù. */
+        /* board í…Œì´ë¸”ì˜ rowë¥¼ ì¹´ìš´íŠ¸í•´ì„œ ë¦¬í„´í•´ì¤€ë‹¤. */
         return $this->db->count_all('board');
     }
 
     public function write($title, $writerName, $password, $content)
     {
-        /* ³» µ¥ÀÌÅÍº£ÀÌ½º board Å×ÀÌºí¿¡ form¿¡¼­ °¡Áö°í ¿Â °ªµéÀ» ³Ö´Â´Ù. */
-       $result = $this->db->insert('board', array(
+        /* reg_date ì»¬ëŸ¼ì˜ ê°’ì€ í•­ìƒ 'NOW()', ì¦‰ í˜„ìž¬ ì‹œê°„ì´ ë“¤ì–´ê°€ëŠ” ê²ƒì„ ë””í´íŠ¸ë¡œ í•œë‹¤! */
+        $this->db->set('reg_date', 'NOW()', false);
+
+        /* ë‚´ ë°ì´í„°ë² ì´ìŠ¤ board í…Œì´ë¸”ì— formì—ì„œ ê°€ì§€ê³  ì˜¨ ê°’ë“¤ì„ ë„£ëŠ”ë‹¤. */
+        $result = $this->db->insert('board', array(
             'title'=>$title,
             'writer_name'=>$writerName,
             'password'=>$password,
@@ -50,7 +53,7 @@ class Board_model extends CI_Model
 
     public  function detail($article_seq)
     {
-        /* board Å×ÀÌºí¿¡¼­ °Ô½Ã±Û ¹øÈ£¿Í °°Àº µ¥ÀÌÅÍº£ÀÌ½º 1ÁÙ(1°³ÀÇ row())ÀÇ µ¥ÀÌÅÍ¸¦ °¡Á®¿Í¼­ ¸®ÅÏÇÑ´Ù. */
+        /* board í…Œì´ë¸”ì—ì„œ ê²Œì‹œê¸€ ë²ˆí˜¸ì™€ ê°™ì€ ë°ì´í„°ë² ì´ìŠ¤ 1ì¤„(1ê°œì˜ row())ì˜ ë°ì´í„°ë¥¼ ê°€ì ¸ì™€ì„œ ë¦¬í„´í•œë‹¤. */
         return $this->db->get_where('board', array('seq'=>$article_seq))->row();
     }
 }

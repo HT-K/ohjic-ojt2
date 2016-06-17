@@ -144,8 +144,6 @@ class Board extends CI_Controller
         /* 게시글 번호를 가져와서 해당 게시글에 대한 정보를 데이터베이스에서 가져온다. */
         $article_row = $this->board_model->detail($article_seq);
 
-        print_r($article_row); exit;
-
         $this->_head();
         /* 가져온 1줄의 데이터를 detailForm에 보내서 뿌린다 */
         /* row로 가져온 데이터이므로 뷰에서 for 문을 돌릴 필요가 없다. */
