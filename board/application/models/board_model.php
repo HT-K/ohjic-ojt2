@@ -24,9 +24,9 @@ class Board_model extends CI_Model
         //return $this->db->query('SELECT * FROM board')->result();
 
         /* board 테이블에서 개수(articleSize) , 시작위치 게시글(startRow) */
+        //return $this->db->get('board', $articleSize, $startRow)->result();
 
         $this->db->limit($articleSize, $startRow);
-
 
         $query = $this->db->get('board');
 
@@ -46,18 +46,15 @@ class Board_model extends CI_Model
         /* reg_date 컬럼의 값은 항상 'NOW()', 즉 현재 시간이 들어가는 것을 디폴트로 한다! */
         $this->db->set('reg_date', 'NOW()', false);
 
+        /* 컬럼 값을 설정(set)해둔다 */
         $this->db->set(array(
             'title'=>$title,
             'writer_name'=>$writerName,
             'password'=>$password,
             'content'=>$content));
 
-        if(isset($name)){
-           $this->db->set('name', $name);
-        }
-
-
         /* 내 데이터베이스 board 테이블에 form에서 가지고 온 값들을 넣는다. */
+        /* $this->db->set으로 설정해둔 컬럼과 값들이 board 테이블에 들어가게 된다. */
         $result = $this->db->insert('board');
 
         return $result;
