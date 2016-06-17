@@ -6,10 +6,6 @@
  * Date: 2016-06-16
  * Time: 오후 1:25
  */
-class page {
-    public $nowPage, $totalArticle, $articleSize, $totalPage, $pageSize, $startRow, $endRow,
-$startPage, $endPage;
-}
 
 class Board extends CI_Controller
 {
@@ -63,7 +59,8 @@ class Board extends CI_Controller
         /* (현재페이지 - 1) * articleSize 를 하면 시작 게시물 위치를 알 수 있다.  */
         $startRow = ($nowPage - 1) * $articleSize;
 
-        //페이지 끝 구하는 공식, ex) prePage(현재페이지 번호)가 3이고 pageSize가 5이면 3*5 = 15
+        //페이지 끝 구하는 공식, ex) prePage(현재페이지 번호)가 3이고 pa
+        //geSize가 5이면 3*5 = 15
         //즉, 3페이지에 맨 끝 글은 15번째 글이 된다는 뜻으로 startRow와 endRow를 합치면 11~15번째 게시글이 3페이지에 보이게 된다!
         //그러나 만약 글이 11개라면 마지막 페이지의 endRow는 11이 되어야한다. 즉 ,pageNo * pageSize 가 totalArticle(총 글 수)보다 크면 endRow를 총 글 수로 지정해줘야 마지막에 해당 수만큼 글이 해당 페이지에 들어간다!
         if ($nowPage * $articleSize > $totalArticle) {
@@ -121,7 +118,8 @@ class Board extends CI_Controller
     }
 
     /* writeForm 에서 글 등록을 눌렀을 시 호출되는 메소드 */
-    public function write() {
+    public function write()
+    {
         /* writeForm 에서 받아온 값들을 각각의 변수에 저장한다. */
         $title = $this->input->post('title');
         $writerName = $this->input->post('writerName');
