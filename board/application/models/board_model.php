@@ -25,7 +25,6 @@ class Board_model extends CI_Model
 
         /* board 테이블에서 개수(articleSize) , 시작위치 게시글(startRow) */
         //return $this->db->get('board', $articleSize, $startRow)->result();
-
         $this->db->limit($articleSize, $startRow);
 
         $query = $this->db->get('board');
@@ -35,12 +34,14 @@ class Board_model extends CI_Model
 
     }
 
+    /* 모든 게시글 수 리턴 */
     public function listCount()
     {
         /* board 테이블의 row를 카운트해서 리턴해준다. */
         return $this->db->count_all('board');
     }
 
+    /* 디비에 글 insert! */
     public function write($title, $writerName, $password, $content)
     {
         /* reg_date 컬럼의 값은 항상 'NOW()', 즉 현재 시간이 들어가는 것을 디폴트로 한다! */
@@ -60,9 +61,40 @@ class Board_model extends CI_Model
         return $result;
     }
 
-    public  function detail($article_seq)
+    /* 해당 게시글의 상세내용 리턴! */
+    public function detail($article_seq)
     {
         /* board 테이블에서 게시글 번호와 같은 데이터베이스 1줄(1개의 row())의 데이터를 가져와서 리턴한다. */
         return $this->db->get_where('board', array('seq'=>$article_seq))->row();
     }
+
+    /* 검색어와 일치하는 게시글 수 리턴 */
+    public function searchCount ($keyField, $keyword) {
+        $sql = "SELECT COUNT(*)
+      FROM board
+     WHERE $keyField LIKE CONCAT('%','$keyword','%')";
+
+
+        /* keyFile 값이 title이면 board 테이블의 title 컬럼에서 keyword(검색어)와 같은 값인 글 들을 검색해서 리턴 */
+        $result = $this->db->query($sql)->result();
+
+        $count = 0;
+        foreach ($result as $enrty)
+        {
+            ++$count;
+        }
+
+        return $count;
+    }
+
+    /* 검색지정, 검색어, 게시글 시작위치, 페이지당 보여질 게시글 수를 이용하여 검색 목록 리턴 */
+    public function searchArticle ($keyField, $keyword, $startRow, $articleSize) {
+        $sql = "SELECT * FROM board
+                WHERE $keyField LIKE CONCAT('%','$keyword','%')
+                ORDER BY seq
+                DESC LIMIT $startRow, $articleSize";
+
+            return $this->db->query($sql)->result();
+    }
+
 }

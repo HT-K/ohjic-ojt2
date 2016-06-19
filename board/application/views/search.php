@@ -11,11 +11,11 @@
         </thead>
         <tbody>
         <?php foreach ($board as $entry) { ?>
-        <tr>
-            <td><?php echo $entry->seq ?></td>
-            <td><a href="/index.php/board/detail/<?php echo $entry->seq ?>"><?php echo $entry->title ?></a></td>
-            <td><?php echo $entry->writer_name ?></td>
-        </tr>
+            <tr>
+                <td><?php echo $entry->seq ?></td>
+                <td><a href="/index.php/board/detail/<?php echo $entry->seq ?>"><?php echo $entry->title ?></a></td>
+                <td><?php echo $entry->writer_name ?></td>
+            </tr>
         <?php } ?>
         <tr>
             <td colspan="3" style="text-align: center;">
