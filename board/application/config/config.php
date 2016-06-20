@@ -23,6 +23,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
+
+/* redirect를 쓰고 싶다면 이 /를 써야한당 */
 $config['base_url'] = '/';
 
 /*
@@ -35,7 +37,10 @@ $config['base_url'] = '/';
 | variable so that it is blank.
 |
 */
-$config['index_page'] = 'index.php';
+
+/* index.php 를 제거하는 과정을 거쳤다면 이 부분은 공백으로 만들어야한다 */
+/* 공백으로 처리하지 않으면 redirect 시에 URL에 뜨게 된다. */
+$config['index_page'] = '';
 
 /*
 |--------------------------------------------------------------------------

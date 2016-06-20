@@ -1,5 +1,5 @@
 <div class="container">
-    <form action="/index.php/board/write" method="post">
+    <form action="/board/write" method="post">
         <div class="form-group">
             <label for="title">제목</label>
             <input type="text" class="form-control" id="title" name="title" value="<?= $article->title ?>" readonly="readonly">

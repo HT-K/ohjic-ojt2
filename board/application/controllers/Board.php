@@ -132,7 +132,7 @@ class Board extends CI_Controller
         /* 글 등록 후에는 다시 게시판 홈으로 가자 */
         $this->load->helper('url'); /* redirect를 쓰기위한 helper */
         /* config.php 에서 $config['base_url'] = '/'; 설정해줘야 동작한다. */
-        redirect('/board'); /* /index.php를 쓰지 않아도 된다. */
+        redirect('/board/board/1' , 'refresh'); /* /index.php를 쓰지 않아도 된다. */
 
     }
 

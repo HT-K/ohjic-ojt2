@@ -25,8 +25,8 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="/index.php/board">게시판 홈</a></li>
-                    <li><a href="/index.php/board/writeForm">글쓰기</a></li>
+                    <li><a href="/board/board/1">게시판 홈</a></li>
+                    <li><a href="/board/writeForm">글쓰기</a></li>
                 </ul>
             </div><!--/.nav-collapse -->
         </div><!--/.container-fluid -->
