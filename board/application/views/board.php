@@ -1,6 +1,7 @@
 <div class="container">
     <h2>게시판 예제</h2>
     <p>게시판 글 목록 보여주기</p>
+
     <table class="table table-striped">
         <thead>
         <tr>
@@ -42,15 +43,15 @@
                             <?php } ?>
                         <?php } ?>
 
-                        <!-- 게시글이 21개 articleSize가 5라면 totalPages는 5이다. 토탈 페이지가 5이고 현재 화면에 끝 페이지가 3이라면 다음 페이지를 알리는 버튼을 보여준다 -->
-                        <?php if ($page['totalPage'] - $page['endPage'] > 0) { ?>
+                        <!-- 시작 페이지 번호가 7이고 한 페이지의 페이지 최대 수가 3일 때, 총 게시물 수를 이용해 구한 totalPage가 9라면 다음 페이지를 알리는 '>>'가 보이지 말아야한다. -->
+                        <?php if ($page['startPage'] + $page['pageSize'] < $page['totalPage']) : ?>
                             <li>
                                 <!-- startPage 가 1이고 한번에 보여줄 페이지 수(pageSize)가 3일 때 >>(다음페이지)버튼을 누르면 4가 보여져야하므로 startPage+pageSize를 pageNo에 담아서 보낸다. -->
                                 <a href="/board/board/<?= $page['startPage'] + $page['pageSize'] ?>" aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>
                             </li>
-                        <?php } ?>
+                        <?php endif ?>
                     </ul>
                 </nav>
             </td>

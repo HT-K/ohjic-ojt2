@@ -47,9 +47,9 @@ class Board extends CI_Controller
         $nmg = $totalArticle % $articleSize;
         if ($nmg != 0) {
             /* round 함수는 결과 값이 소수일 경우 반올림해주는 메소드다 */
-            $totalPage = round(($totalArticle / $articleSize)+1);
+            $totalPage = ceil(($totalArticle / $articleSize)+1);
         } else {
-            $totalPage = round($totalArticle / $articleSize);
+            $totalPage = ceil($totalArticle / $articleSize);
         }
 
         /* 한 페이지에 보여줄 최대 페이지 수 */
@@ -153,8 +153,12 @@ class Board extends CI_Controller
     /* 검색 버튼 클릭 시 호출되는 메소드 */
     public function search($nowPage) {
         /* view의 form에서 보내온 keyFiled와 keyword 값 받아오기 */
-        $keyField = $_GET['keyField'];
-        $keyword = $_GET['keyword'];
+        //$keyField = $_GET['keyField'];
+        //$keyword = $_GET['keyword'];
+
+        /* 이 방법으로도 가능하다. */
+        $keyField = $this->input->get('keyField');
+        $keyword = $this->input->get('keyword');
 
         /* board 의 모든 게시글 수를 가져온다 */
         $totalArticle = $this->board_model->searchCount($keyField, $keyword);
@@ -165,11 +169,11 @@ class Board extends CI_Controller
         /* 총 게시물 수에 비례한 총 페이지 수 */
         $nmg = $totalArticle % $articleSize;
         if ($nmg != 0) {
-            /* round 함수는 결과 값이 소수일 경우 반올림해주는 메소드다 */
-            $totalPage = round(($totalArticle / $articleSize)+1);
+            /* ceil 함수는 결과 값이 소수일 경우 올림해주는 메소드다 */
+            $totalPage = ceil(($totalArticle / $articleSize)+1);
 
         } else {
-            $totalPage = round($totalArticle / $articleSize);
+            $totalPage = ceil($totalArticle / $articleSize);
         }
 
         /* 한 페이지에 보여줄 최대 페이지 수 */
