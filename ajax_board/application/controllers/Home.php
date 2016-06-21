@@ -27,7 +27,7 @@ class Home extends CI_Controller
         /* /index.php/board 로 접속 시 /index.php/board/board/1로 리다이렉트 시킨다. */
         $this->load->helper('url'); /* redirect를 쓰기위한 helper */
         /* config.php 에서 $config['base_url'] = '/'; 설정해줘야 동작한다. */
-        redirect('board/board'); /* /index.php를 쓰지 않아도 된다. */
+        redirect('board'); /* /index.php를 쓰지 않아도 된다. */
     }
 
     public function home()

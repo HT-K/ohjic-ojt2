@@ -10,14 +10,7 @@
             <th>작성자</th>
         </tr>
         </thead>
-        <tbody>
-        <?php foreach ($board as $entry) { ?>
-            <tr>
-                <td><?php echo $entry->seq ?></td>
-                <td><a href="/board/detail/<?php echo $entry->seq ?>"><?php echo $entry->title ?></a></td>
-                <td><?php echo $entry->writer_name ?></td>
-            </tr>
-        <?php } ?>
+        <tbody id="article_list">
         <tr>
             <td colspan="3" style="text-align: center;">
                 <nav>
@@ -85,9 +78,35 @@
 
 <script src="../user_guide/_static/js/article.js"></script>
 
+
 <script type="text/javascript">
     /* 메인 메소드라고 보면 된다. */
     $(function(){
-        article.articleAll();
+        alert(1);
+        $.ajax({
+            url : 'http://ajaxboard.kr/board/board',
+            data : {
+            },
+            dataType : 'JSON',
+            type : 'GET',
+            success : function(data) {
+                alert(data.board[1].seq);
+                var article_list;
+                for (var i = data.board.length - 1; i >= 0; i--)
+                {
+                    // 첫번째 줄엔 '+' 기호를 쓰면 안된다.
+                    article_list =
+                          '<tr>'
+                        + '<td>' + data.board[i].seq + '</td>'
+                        + '<td><a href="/board/detail?' + data.board[i].seq + '">' + data.board[i].title + '</a></td>'
+                        + '<td>' + data.board[i].writer_name + '</td>'
+                        + '</tr>';
+                    $('#article_list').prepend(article_list);
+                }
+            },
+            error : function(request,status,msg) {
+                alert("code:" + request.status+"\n"+"message:"+request.responseText+"\n"+"msg:"+msg);
+            }
+        });
     });
 </script>
