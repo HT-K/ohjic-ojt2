@@ -12,7 +12,7 @@
     <!-- 합쳐지고 최소화된 최신 자바스크립트 -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 </head>
 <body>
 <div class="container">
@@ -24,8 +24,8 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="/board/board/1">게시판 홈</a></li>
-                    <li><a href="/board/writeForm">글쓰기</a></li>
+                    <li><a href="/board/board" id="article_home" name="article_home">게시판 홈</a></li>
+                    <li><a href="/board/writeForm" id="write_form" name="write_form">글쓰기</a></li>
                 </ul>
             </div><!--/.nav-collapse -->
         </div><!--/.container-fluid -->

@@ -14,6 +14,12 @@ class Home extends CI_Controller
         parent::__construct();
         /* 내가 설정한 데이터베이스 라이브러리 설정 */
         $this->load->database();
+
+    }
+
+    public function _header()
+    {
+        $this->load->view('header');
     }
 
     public function index()
@@ -21,12 +27,14 @@ class Home extends CI_Controller
         /* /index.php/board 로 접속 시 /index.php/board/board/1로 리다이렉트 시킨다. */
         $this->load->helper('url'); /* redirect를 쓰기위한 helper */
         /* config.php 에서 $config['base_url'] = '/'; 설정해줘야 동작한다. */
-        redirect('home/home'); /* /index.php를 쓰지 않아도 된다. */
+        redirect('board/board'); /* /index.php를 쓰지 않아도 된다. */
     }
 
     public function home()
     {
-        echo "test"; exit;
+        $this->_header();
+        $this->load->view('content');
+        $this->load->view('footer');
     }
 
 }
