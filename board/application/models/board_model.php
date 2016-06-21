@@ -89,12 +89,19 @@ class Board_model extends CI_Model
 
     /* 검색지정, 검색어, 게시글 시작위치, 페이지당 보여질 게시글 수를 이용하여 검색 목록 리턴 */
     public function searchArticle ($keyField, $keyword, $startRow, $articleSize) {
-        $sql = "SELECT * FROM board
+       /* $sql = "SELECT * FROM board
                 WHERE $keyField LIKE CONCAT('%','$keyword','%')
                 ORDER BY seq
                 DESC LIMIT $startRow, $articleSize";
 
-            return $this->db->query($sql)->result();
+            return $this->db->query($sql)->result();*/
+
+        $this->db->select('*');
+        $this->db->from('board');
+        $this->db->like($keyField, $keyword);
+        $this->db->limit($articleSize, $startRow);
+
+        return $this->db->get()->result();
     }
 
 }
