@@ -24,7 +24,7 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="/board/board" id="article_home" name="article_home">게시판 홈</a></li>
+                    <li><a href="/board" id="article_home" name="article_home">게시판 홈</a></li>
                     <li><a href="/board/writeForm" id="write_form" name="write_form">글쓰기</a></li>
                 </ul>
             </div><!--/.nav-collapse -->

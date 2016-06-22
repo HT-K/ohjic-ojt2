@@ -1,4 +1,4 @@
-<div class="container" id="content">
+<div class="container">
     <h2>게시판 예제</h2>
     <p>게시판 글 목록 보여주기</p>
 
@@ -20,9 +20,7 @@
                         <?php if ($page['startPage'] - $page['pageSize'] > 0): ?>
                             <li>
                                 <!-- 현재 페이지가 4이고 pageSize가 3일 때 <<(이전페이지)버튼을 누르면 자동으로 1페이지에 있는 게시글이 보이도록 설정! -->
-                                <a href="/board/board?nowPage=<?php echo $page['startPage'] - $page['pageSize'] ?>
-                                                &keyField=<?php echo $page['keyField'] ?>
-                                                &keyWord=<?php echo $page['keyWord']?>" aria-label="Previous">
+                                <a href="/board/board?nowPage=<?php echo $page['startPage'] - $page['pageSize'] ?>&keyField=<?php echo $page['keyField'] ?>&keyWord=<?php echo $page['keyWord']?>" aria-label="Previous">
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
                             </li>
@@ -31,15 +29,11 @@
                         <?php for ($i = $page['startPage']; $i <= $page['endPage']; $i++) { ?>
                             <?php if ($i == $page['nowPage']) { ?>
                                 <!-- 현재 페이지는 파란색 백그라운드 효과 -->
-                                <li class="active"><a href="/board/board?nowPage=<?php echo $page['nowPage'] ?>
-                                                &keyField=<?php echo $page['keyField'] ?>
-                                                &keyWord=<?php echo $page['keyWord']?>"><?php echo $page['nowPage'] ?><span class="sr-only">(current)</span></a></li>
+                                <li class="active"><a href="/board/board?nowPage=<?php echo $page['nowPage'] ?>&keyField=<?php echo $page['keyField'] ?>&keyWord=<?php echo $page['keyWord']?>"><?php echo $page['nowPage'] ?><span class="sr-only">(current)</span></a></li>
                             <?php }
                             else { ?>
                                 <!-- 현재 클릭한 페이지를 제외한 나머지는 하얀색 백그라운드 -->
-                                <li><a href="/board/board?nowPage=<?php echo $i ?>
-                                                &keyField=<?php echo $page['keyField'] ?>
-                                                &keyWord=<?php echo $page['keyWord']?>"><?php echo $i ?>
+                                <li><a href="/board/board?nowPage=<?php echo $i ?>&keyField=<?php echo $page['keyField'] ?>&keyWord=<?php echo $page['keyWord']?>"><?php echo $i ?>
                                     </a>
                                 </li>
                             <?php } ?>
@@ -49,9 +43,7 @@
                         <?php if ($page['startPage'] + $page['pageSize'] < $page['totalPage']) : ?>
                             <li>
                                 <!-- startPage 가 1이고 한번에 보여줄 페이지 수(pageSize)가 3일 때 >>(다음페이지)버튼을 누르면 4가 보여져야하므로 startPage+pageSize를 pageNo에 담아서 보낸다. -->
-                                <a href="/board/board?nowPage=<?php echo $page['startPage'] + $page['pageSize'] ?>
-                                                &keyField=<?php echo $page['keyField'] ?>
-                                                &keyWord=<?php echo $page['keyWord']?>" aria-label="Next">
+                                <a href="/board/board?nowPage=<?php echo $page['startPage'] + $page['pageSize'] ?>&keyField=<?php echo $page['keyField'] ?>&keyWord=<?php echo $page['keyWord']?>" aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>
                             </li>
@@ -82,6 +74,8 @@
 
 <script type="text/javascript">
     /* 메인 메소드라고 보면 된다. */
+
+
     $(function(){
         $.ajax({
             url : 'http://ajaxboard.kr/board/board',
@@ -111,9 +105,6 @@
 
         $('#searchBtn').click(function(e){
             e.preventDefault();
-            $.ajax({
-
-            });
         });
     });
 </script>

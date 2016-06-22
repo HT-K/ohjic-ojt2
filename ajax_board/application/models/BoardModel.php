@@ -35,31 +35,28 @@ class BoardModel extends CI_Model
 
     public function countBySearch($keyField, $keyWord)
     {
-        $sql = "SELECT COUNT(*)
+        $sql = "SELECT COUNT(*) as num
                 FROM board
                 WHERE $keyField LIKE CONCAT('%','$keyWord','%')";
 
 
         /* keyFile 값이 title이면 board 테이블의 title 컬럼에서 keyword(검색어)와 같은 값인 글 들을 검색해서 리턴 */
-        $result = $this->db->query($sql)->result();
+        $result = $this->db->query($sql)->row_array();
 
-        $count = 0;
-        foreach ($result as $enrty)
-        {
-            ++$count;
-        }
+        /*print_r($result['num']); 구글 개발자모드의 Network-> Preview에서 값을 확인해볼 수 있다.*/
 
-        return $count;
+        return $result['num'];
+
     }
 
     public function getListBySearch($keyField, $keyWord, $startRow, $articleSize)
     {
-        /* $sql = "SELECT * FROM board
-                WHERE $keyField LIKE CONCAT('%','$keyword','%')
-                ORDER BY seq
-                DESC LIMIT $startRow, $articleSize";
+     /*$sql = "SELECT * FROM board
+            WHERE $keyField LIKE CONCAT('%','$keyword','%')
+            ORDER BY seq
+            DESC LIMIT $startRow, $articleSize";
 
-            return $this->db->query($sql)->result();*/
+        return $this->db->query($sql)->result();*/
 
         $this->db->select('*');
         $this->db->from('board');
