@@ -121,7 +121,7 @@ class Board extends CI_Controller
 
         $this->_header();
         //가져온 게시글을 board(view)에 보낸다.
-        $this->load->view('content2', $this->param);
+        $this->load->view('content', $this->param);
         $this->load->view('footer');
     }
 
@@ -181,7 +181,7 @@ class Board extends CI_Controller
         /* 현재 페이지에 보여지는 시작 페이지 숫자 (1페이지면 1부터 보여진다) */
         $startPage = $nowPage - (($nowPage-1) % $pageSize);
 
-        /* 현재 페이지에서 보여질 마지막 페이지 숫자 (시작이 1페이지라면 끝은 4페이지) */
+        /* 현재 페이지에서 보여질 마지막 페이지 숫자 (시작이 1페이지라면 끝은 3페이지) */
         $end = $startPage + $pageSize - 1;
         if ($end > $totalPage) {
             $end = $totalPage;

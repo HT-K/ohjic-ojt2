@@ -11,12 +11,13 @@
         </tr>
         </thead>
         <tbody id="article_list">
+        <!-- 여기에 게시글 목록이 들어갈 것이다. -->
         <tr>
             <td colspan="3" style="text-align: center;">
                 <nav>
                     <ul class="pagination">
                         <!-- 현재 페이지가 4이고 pageSize가 3일 때 <<(이전페이지)버튼을 누르면 자동으로 1페이지에 있는 게시글이 보이도록 설정! -->
-                        <?php if ($page['startPage'] - $page['pageSize'] > 0) { ?>
+                        <?php if ($page['startPage'] - $page['pageSize'] > 0): ?>
                             <li>
                                 <!-- 현재 페이지가 4이고 pageSize가 3일 때 <<(이전페이지)버튼을 누르면 자동으로 1페이지에 있는 게시글이 보이도록 설정! -->
                                 <a href="/board/board?nowPage=<?php echo $page['startPage'] - $page['pageSize'] ?>
@@ -25,14 +26,14 @@
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
                             </li>
-                        <?php } ?>
+                        <?php endif ?>
 
                         <?php for ($i = $page['startPage']; $i <= $page['endPage']; $i++) { ?>
                             <?php if ($i == $page['nowPage']) { ?>
                                 <!-- 현재 페이지는 파란색 백그라운드 효과 -->
                                 <li class="active"><a href="/board/board?nowPage=<?php echo $page['nowPage'] ?>
                                                 &keyField=<?php echo $page['keyField'] ?>
-                                                &keyWord=<?php echo $page['keyWord']?>"><?= $page['nowPage'] ?><span class="sr-only">(current)</span></a></li>
+                                                &keyWord=<?php echo $page['keyWord']?>"><?php echo $page['nowPage'] ?><span class="sr-only">(current)</span></a></li>
                             <?php }
                             else { ?>
                                 <!-- 현재 클릭한 페이지를 제외한 나머지는 하얀색 백그라운드 -->
@@ -82,15 +83,14 @@
 <script type="text/javascript">
     /* 메인 메소드라고 보면 된다. */
     $(function(){
-        alert(1);
         $.ajax({
             url : 'http://ajaxboard.kr/board/board',
             data : {
+                nowPage : <?php echo $page['nowPage'] ?>
             },
             dataType : 'JSON',
             type : 'GET',
             success : function(data) {
-                alert(data.board[1].seq);
                 var article_list;
                 for (var i = data.board.length - 1; i >= 0; i--)
                 {
@@ -107,6 +107,13 @@
             error : function(request,status,msg) {
                 alert("code:" + request.status+"\n"+"message:"+request.responseText+"\n"+"msg:"+msg);
             }
+        });
+
+        $('#searchBtn').click(function(e){
+            e.preventDefault();
+            $.ajax({
+
+            });
         });
     });
 </script>

@@ -101,6 +101,7 @@ class Board_model extends CI_Model
         $this->db->like($keyField, $keyword);
         $this->db->limit($articleSize, $startRow);
 
+        /* result는 객체배열 형태로 리턴 */
         return $this->db->get()->result();
     }
 
