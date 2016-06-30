@@ -27,7 +27,7 @@ var dateFunc = {
         var startDay = dateFunc.getStartDay(year, month); // 현재 달의 시작 요일
         var start_preDate = preTotalDate - startDay + 1; // 현재 달력에서 이전 달의 시작하는 일자를 구한다.
 
-        var view = '<tr align="center">';
+        var view = '<tr>';
 
         // 현재 달에 남은 자리가 있으면 이전 달의 날짜를 구해서 넣는다. (현재 달의 시작이 목요일이면 월~수는 이전달의 숫자가 들어가야 한다)
         for (var i = 0; i < startDay; i++) {
@@ -57,7 +57,7 @@ var dateFunc = {
             {
                 startDay = 0;
                 view += '</tr>';
-                view += '<tr align="center">';
+                view += '<tr>';
             }
         }
 
@@ -77,7 +77,7 @@ var dateFunc = {
        var title = date.getFullYear()+"년 " + (date.getMonth()+1) +"월 " + date.getDate() +"일 ~ "; // 주간 시작 날짜
 
         // 세팅된 현재 주간의 일요일 날짜부터 토요일날짜까지 +1 씩 해주면서 td에 세팅한다.
-        var view = "<tr>";
+        var view = '<tr>';
         for (var i = 0; i < 7; i++) {
             view += '<td>'+date.getDate()+'</td>';
             date.setDate(date.getDate() + 1); // 해당 주간 세팅
@@ -91,4 +91,5 @@ var dateFunc = {
         $("#ym").html(title);
         $("#calendar_body").html(view);
     } //weekView End
+
 }
