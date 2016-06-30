@@ -18,20 +18,22 @@ var dateFunc = {
         date.setFullYear(year);
         date.setMonth(month);
         date.setDate(1);
-        return date.getDay(); // 해당 year, month의 시작 요일을 구해서 리턴한다.
+        return date // 해당 year, month의 시작 요일을 구해서 리턴한다.
     }, // getStartDate End
 
     monthView : function(year, month) { // '월' 달력을 그려주기 위한 함수
+        $("#ym").html(year+"년 " + (month+1) +"월");
         var nowTotalDate = dateFunc.getTotalDate(year, month); // 현재 달의 총 일 수
         var preTotalDate = dateFunc.getTotalDate(year, month-1); // 이전 달의 총 일 수
-        var startDay = dateFunc.getStartDay(year, month); // 현재 달의 시작 요일
+        var date = dateFunc.getStartDay(year, month); // 현재 달의 1일 구해오기
+        var startDay = date.getDay(); // 현재 달의 1일의 시작 요일 구하기
         var start_preDate = preTotalDate - startDay + 1; // 현재 달력에서 이전 달의 시작하는 일자를 구한다.
 
         var view = '<tr>';
 
         // 현재 달에 남은 자리가 있으면 이전 달의 날짜를 구해서 넣는다. (현재 달의 시작이 목요일이면 월~수는 이전달의 숫자가 들어가야 한다)
         for (var i = 0; i < startDay; i++) {
-            view += '<td><font color="gray">'+ start_preDate +'</td>';
+            view += '<td><font color="gray">'+ date.getFullYear() + "-" + date.getMonth() + "-" + start_preDate +'</td>';
             start_preDate++;
         }
 
@@ -39,17 +41,17 @@ var dateFunc = {
         for (var i = 1; i <= nowTotalDate; i++) {
             if(startDay == 0) //요일이 일요일 일때 글씨색을 붉은색으로 한다.
             {
-                view += '<td><font color="red">'+i+'</font></td>';
+                view += '<td><font color="red">'+ date.getFullYear() + "-" + (date.getMonth() + 1) + "-" +i+'</font></td>';
                 startDay++;
             }
             else if(startDay == 6) //요일이 토요일 일때 글씨색을 파란색으로 한다.
             {
-                view += '<td><font color="blue">'+i+'</font></td>';
+                view += '<td><font color="blue">'+ date.getFullYear() + "-" + (date.getMonth() + 1) + "-" +i+'</font></td>';
                 startDay++;
             }
             else //평일 일때 글씨색을 검정색으로 한다.
             {
-                view += '<td>'+i+'</td>';
+                view += '<td>'+ date.getFullYear() + "-" + (date.getMonth() + 1) + "-" +i+'</td>';
                 startDay++;
             }
 
@@ -63,12 +65,13 @@ var dateFunc = {
 
         if (startDay < 7) { // 현재 달의 맨 마지막 주에 공간이 남으면 다음 달 1일부터 채워넣는다!
             for (i = 1; startDay <= 6; i++) {
-                view += '<td><font color="gray">'+i+'</td>';
+                view += '<td><font color="gray">'+ date.getFullYear() + "-" + (date.getMonth() + 2) + "-" +i+'</td>';
                 startDay++;
             }
         }
 
         $("#calendar_body").html(view); // 해당 달의 view를 tbody 안에 띄워준다
+        init();
     }, // monthView End
 
     weekView : function(date, week){ // '주' 달력을 그려주기 위한 함수
@@ -93,3 +96,4 @@ var dateFunc = {
     } //weekView End
 
 }
+

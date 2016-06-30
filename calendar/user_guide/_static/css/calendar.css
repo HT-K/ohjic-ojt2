@@ -29,3 +29,8 @@
 #calendar_body tr .ui-selected {
     background: #F39814; color: white;
 }
+
+
+#calendar_body td.selected {
+    background-color: #FECA40;
+}
