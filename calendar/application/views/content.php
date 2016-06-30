@@ -51,29 +51,36 @@
 
  <script type="text/javascript">
      $(function(){
-         var flag = 1; // '월' 버튼 상태일 경우 , '주' 버튼 상태일 경우 2로바꾸자
-
-         var date = new Date();
-         var year = date.getFullYear(); // 현재 로컬 시간의 년도를 구한다.
-         var month = date.getMonth(); // 현재 로컬 시간의 월을 구한다.
-         $("#ym").html(year + "년 " + (month+1) +"월"); // 현재 년도와 월을 입력한다.
+         //var year = date.getFullYear(); // 현재 로컬 시간의 년도를 구한다.
+         //var month = date.getMonth(); // 현재 로컬 시간의 월을 구한다.
          //var nowDate = date.getDate(); // 현재 '일'
          //var nowDay = date.getDay(); // 현재 '요일', 0부터 시작 (0-일요일, 1-월요일 ...)
-         dateFunc.monthView(year, month);
+         //$("#ym").html(year + "년 " + (month+1) +"월"); // 현재 년도와 월을 입력한다.
 
-         var weekDate;
-
-         $("#month").click(function(e){ // '월' 을 눌렀을 경우
+         // month 달력 구하는 방법 1
+        /* $("#month").click(function(e){ // '월' 을 눌렀을 경우
              flag = 1;
              e.preventDefault();
              $("#ym").html(year+"년 " + (month+1) +"월");
              dateFunc.monthView(year, month);
-         }); // month End
+         }); // month End*/
+
+         var flag = 1; // '월' 버튼 상태일 경우 , '주' 버튼 상태일 경우 2로바꾸자
+
+         var date = new Date();
+         dateFunc.monthView(date, 0);
+
+         // month 달력 구하는 방법 2
+         $("#month").click(function(e){
+             e.preventDefault();
+             date = new Date(); // 현재 날짜 구하기
+             dateFunc.monthView(date, 0); // 현재 '달' 까지만 함수로 보내기
+         });
 
          $("#week").click(function(e){ // '주'를 눌렀을 경우
-             flag = 2;
              e.preventDefault();
 
+             flag = 2;
              date = new Date(); // 현재 날짜 구하기
              date.setDate(date.getDate() - date.getDay()); // 현재 날짜의 첫 주 구하기
              dateFunc.weekView(date, 0); // 첫 주를 구했기 때문에 더할 숫자가 없다.
@@ -82,13 +89,7 @@
          $('#prev').click(function(e){
              e.preventDefault();
              if (flag == 1) {
-                 month = month - 1; // 이전이니까 월을 -1
-                 if (month == -1) { // 현재 년도에서 더이상 이전 할 월이 없으면
-                     year = year - 1;
-                     month = 11; // 12월 값이다.
-                 }
-                 $("#ym").html(year+"년 " + (month+1) +"월");
-                 dateFunc.monthView(year, month);
+                 dateFunc.monthView(date, -1);
              }
              else
              {
@@ -100,13 +101,7 @@
          $("#next").click(function(e){
              e.preventDefault();
              if (flag == 1) { // '월' 버튼 클릭 시
-                 month = month + 1;
-                 if (month == 12) {
-                     year = year + 1;
-                     month = 0; // 1월 값이다.
-                 }
-                 $("#ym").html(year+"년 " + (month+1) +"월");
-                 dateFunc.monthView(year, month);
+                 dateFunc.monthView(date, 1);
              }
              else { // '주' 버튼 클릭 시
                  e.preventDefault();
@@ -114,14 +109,6 @@
              }
          }); // next End
 
-         $("#calendar_body").click(function(){
-             date = new Date(); // 현재 날짜 구하기
-             var year = date.getFullYear();
-             var month = date.getMonth();
-             date = new Date(year, month, 1);
-             date.setDate(date.getDate() - date.getDay());
-             alert(date);
-         });
 
         /* $('#calendar_body tr td').on({
             mousedown : function(e){
