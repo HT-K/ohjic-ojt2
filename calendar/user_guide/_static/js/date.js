@@ -79,7 +79,7 @@ var dateFunc = {
         // 세팅된 현재 주간의 일요일 날짜부터 토요일날짜까지 +1 씩 해주면서 td에 세팅한다.
         var view = '<tr>';
         for (var i = 0; i < 7; i++) {
-            view += '<td>'+date.getDate()+'</td>';
+            view += '<td>'+ date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() +'</td>';
             date.setDate(date.getDate() + 1); // 해당 주간 세팅
         }
         view += '</tr>';
