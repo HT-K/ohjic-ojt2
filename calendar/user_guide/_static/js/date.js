@@ -42,8 +42,9 @@ var dateDraw = (function () {
             var view = '<tr>';
 
             // 현재 달에 남은 자리가 있으면 이전 달의 날짜를 구해서 넣는다. (현재 달의 시작이 목요일이면 월~수는 이전달의 숫자가 들어가야 한다)
+            var befMonth = new Date(year, month-1, start_preDate); // 현재 달력에 회색으로 보이게 될 이전달 시작일을 설정해준다
             for (var i = 0; i < startDay; i++) {
-                view += '<td><font color="gray">'+ date.getFullYear() + "-" + date.getMonth() + "-" + start_preDate +'</td>';
+                view += '<td><font color="gray">'+ befMonth.getFullYear() + "-" + (befMonth.getMonth()+1) + "-" + start_preDate +'</td>';
                 start_preDate++;
             }
 
