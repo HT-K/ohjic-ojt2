@@ -97,43 +97,75 @@ var dateDraw = (function () {
             mouseEvent.init(); // tbody에 마우스 이벤트 연결
         }, // monthView End
 
-        weekView : function(date, week){ // '주' 달력을 그려주기 위한 함수
+        /*$.ajax({
+            url : 'http://calendar.kr/calendar/scheduleGet', // 호출할 컨트롤러의 메소드
+            data : {strDate : temp},
+            type : 'post',
+            dataType : 'json',
+            success : function(data) {
+
+
+            },
+            error : function() {
+                alert("error");
+            }
+        }); // ajax End*/
+
+        weekView : function(date, week) { // '주' 달력을 그려주기 위한 함수
             date.setDate(date.getDate()+ week * 7); // 현재 주간의 시작 '일요일'로 세팅!
             var today = new Date();
             today = today.getFullYear()+ "-" + (today.getMonth()+1) + "-" + today.getDate(); // 현재 날짜에 배경색을 칠하기 위해 미리 구해놓음.
 
             var title = date.getFullYear()+"년 " + (date.getMonth()+1) +"월 " + date.getDate() +"일 ~ "; // 주간 시작 날짜
-
+            var temp = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
             // 세팅된 현재 주간의 일요일 날짜부터 토요일날짜까지 +1 씩 해주면서 td에 세팅한다.
             var view = '<tr>';
-            for (var i = 0; i < 7; i++) {
-                var temp = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
+            $.ajax({
+                url : 'http://calendar.kr/calendar/scheduleGet', // 호출할 컨트롤러의 메소드
+                data : {strDate : temp},
+                type : 'post',
+                dataType : 'json',
+                success : function(data) {
+                for (var i = 0; i < 7; i++) {
+                    temp = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
+                    /*$.getJSON('http://calendar.kr/calendar/scheduleGet?strDate='+temp, function(data){
+                        alert(data.cal[0].content);
+                    });*/
 
-                if (today == temp) // 오늘 날짜와 td에 들어갈 날짜가 같으면 (즉, 달력에 뿌려질 날짜가 오늘이면)
-                {
-                    view += '<td style="background-color: gray;">'
-                }
-                else
-                {
-                    view += '<td>'
-                }
+                    if (today == temp) // 오늘 날짜와 td에 들어갈 날짜가 같으면 (즉, 달력에 뿌려질 날짜가 오늘이면)
+                    {
+                        view += '<td style="background-color: gray;">';
+                        view += '<div>'+ "123" +'</div>';
+                    }
+                    else
+                    {
+                        view += '<td>';
+                    }
 
-                view += temp +'</td>';
-                date.setDate(date.getDate() + 1); // 해당 주간 세팅
+                    view += temp +'</td>';
+                    date.setDate(date.getDate() + 1); // 해당 주간 세팅
+                }
+                    view += '</tr>';
+
+                    date.setDate(date.getDate() - 1); // 늘어난 1일을 잠시 -1 해서 세팅 (주간 달력에 글씨 띄우기 위함)
+
+                    title += date.getFullYear()+"년 " + (date.getMonth()+1) +"월 " + date.getDate() +"일"; // 주간 끝 날짜
+
+                    date.setDate(date.getDate() + 1);
+
+                    date.setDate(date.getDate() - 7); // 다시 현재 주간의 일요일로 세팅
+
+                    $("#ym").html(title);
+                    $("#calendar_body").html(view);
+                    mouseEvent.init(); // tbody에 마우스 이벤트 연결
+
+            },
+
+            error : function() {
+                alert("error");
             }
-            view += '</tr>';
+            }); // ajax End*/
 
-            date.setDate(date.getDate() - 1); // 늘어난 1일을 잠시 -1 해서 세팅 (주간 달력에 글씨 띄우기 위함)
-
-            title += date.getFullYear()+"년 " + (date.getMonth()+1) +"월 " + date.getDate() +"일"; // 주간 끝 날짜
-
-            date.setDate(date.getDate() + 1);
-
-            date.setDate(date.getDate() - 7); // 다시 현재 주간의 일요일로 세팅
-
-            $("#ym").html(title);
-            $("#calendar_body").html(view);
-            mouseEvent.init(); // tbody에 마우스 이벤트 연결
         }, //weekView End
     }
 
@@ -145,19 +177,6 @@ var mouseEvent = (function () {
     var isDragging = false;
     var strDate;
     var endDate;
-
-    return { // 아래 init과 scheduleInsert는 어디서든지 접근할 수 있는 publick이 됨
-        init: function () { // monthView와 weekView에서 호출해야되므로 public으로!
-            $("#calendar_body tr td")
-                .mousedown(rangeMouseDown)
-                .mouseup(rangeMouseUp)
-                .mousemove(rangeMouseMove);
-        },
-
-        scheduleInsert : function () { // '일정등록' 버튼 클릭 시 호출되야해서 publick으로 해주고 내부 함수인 scheduleReg()를 호출되게 한다.
-           scheduleReg();
-        },
-    }
 
     function rangeMouseDown (e) {
         if (isRightClick(e)) {
@@ -221,14 +240,14 @@ var mouseEvent = (function () {
         return false;
     }
 
-    function scheduleReg() {
+    var scheduleReg = function () {
         var data = {
             content : $("#scheduleContent").val(),
             strDate : strDate,
             endDate : endDate
         };
         $.ajax({
-            url : 'http://calendar.kr/calendar/register', // 호출할 컨트롤러의 메소드
+            url : 'http://calendar.kr/calendar/scheduleSet', // 호출할 컨트롤러의 메소드
             data : data,
             type : 'post',
             dataType : 'json',
@@ -241,6 +260,19 @@ var mouseEvent = (function () {
                 alert("error");
             }
         });
-    }
+    };
+
+    return { // 아래 init과 scheduleInsert는 어디서든지 접근할 수 있는 publick이 됨
+        init: function () { // monthView와 weekView에서 호출해야되므로 public으로!
+            $("#calendar_body tr td")
+                .mousedown(rangeMouseDown)
+                .mouseup(rangeMouseUp)
+                .mousemove(rangeMouseMove);
+        },
+
+        scheduleInsert : function () { // '일정등록' 버튼 클릭 시 호출되야해서 publick으로 해주고 내부 함수인 scheduleReg()를 호출되게 한다.
+            scheduleReg();
+        }
+    };
 
 })(); // mouseEvent 모듈 End

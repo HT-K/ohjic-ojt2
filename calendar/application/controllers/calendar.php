@@ -25,7 +25,19 @@ class Calendar extends CI_Controller
         $this->load->view('footer');
     }
 
-    public function register()
+    public function scheduleGet()
+    {
+        $startDate = $this->input->post('strDate');
+        $result = $this->CalendarModel->scheduleSelect($startDate);
+        $ret = array (
+            'cal' => $result
+        );
+
+        echo json_encode($ret, JSON_UNESCAPED_UNICODE);
+    }
+
+
+    public function scheduleSet()
     {
         /* post로 보낸 값을 받는다. */
         $content = $this->input->post('content');
@@ -33,7 +45,7 @@ class Calendar extends CI_Controller
         $endDate = $this->input->post('endDate');
 
         /* 데이터베이스와 통신하기 위해 모델을 호출 */
-        $this->CalendarModel->register($content, $startDate, $endDate);
+        $this->CalendarModel->scheduleInsert($content, $startDate, $endDate);
 
         $check = "성공";
 
@@ -44,4 +56,5 @@ class Calendar extends CI_Controller
         /* json 으로 encode 하여 .ajax에게 리턴~ (echo를 써줘야한다!) */
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
+
 }

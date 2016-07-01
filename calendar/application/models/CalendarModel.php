@@ -13,7 +13,14 @@ class CalendarModel extends CI_Model
         parent::__construct();
     }
 
-    public function register($content, $startDate, $endDate)
+    public function scheduleSelect($strDate)
+    {
+        $query = $this->db->get_where('calendar', array('start_date' => $strDate));
+
+        return $query->result();
+    }
+
+    public function scheduleInsert($content, $startDate, $endDate)
     {
         $this->db->set(array(
             'content'=>$content,

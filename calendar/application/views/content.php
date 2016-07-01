@@ -73,7 +73,6 @@
          $("#week").click(function(e){ // '주'를 눌렀을 경우
              flag = 2;
              e.preventDefault();
-
              date = new Date(); // 현재 날짜 구하기
              date.setDate(date.getDate() - date.getDay()); // 현재 날짜의 첫 주 구하기
              dateDraw.weekView(date, 0); // 첫 주를 구했기 때문에 더할 숫자가 없다.
