@@ -63,7 +63,7 @@ var dateFunc = {
             }
         }
 
-        if (startDay < 7) { // 현재 달의 맨 마지막 주에 공간이 남으면 다음 달 1일부터 채워넣는다!
+        if (startDay < 6) { // 현재 달의 맨 마지막 주에 공간이 남으면 다음 달 1일부터 채워넣는다!
             for (i = 1; startDay <= 6; i++) {
                 view += '<td><font color="gray">'+ date.getFullYear() + "-" + (date.getMonth() + 2) + "-" +i+'</td>';
                 startDay++;
@@ -71,7 +71,7 @@ var dateFunc = {
         }
 
         $("#calendar_body").html(view); // 해당 달의 view를 tbody 안에 띄워준다
-        init();
+        init(); // tbody에 마우스 이벤트 연결
     }, // monthView End
 
     weekView : function(date, week){ // '주' 달력을 그려주기 위한 함수

@@ -63,6 +63,9 @@
          $("#month").click(function(e){ // '월' 을 눌렀을 경우
              flag = 1;
              e.preventDefault();
+             date = new Date();
+             year = date.getFullYear(); // 현재 로컬 시간의 년도를 구한다.
+             month = date.getMonth();
              dateFunc.monthView(year, month);
          }); // month End
 
