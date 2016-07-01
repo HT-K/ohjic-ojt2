@@ -33,9 +33,10 @@
                          <label for="scheduleContent" class="control-label">일정 내용</label>
                          <input type="text" class="form-control" id="scheduleContent">
                      </div>
-                     <div class="form-group">
-                         <label for="scheduleTime" class="control-label">시간</label>
-                         <p id="scheduleTime"><!--내가 선택한 시간이 들어갈 곳--></p>
+                     <div class="form-group" style="padding: 0 0 10px 0;">
+                         <p id="scheduleStart" style="float: left;"><!--내가 선택한 시작 날짜가 들어가는 곳--></p>
+                         <p style="float: left; padding: 0 5px 0 5px;"> ~ </p>
+                         <p id="scheduleEnd" style="float: left;"><!-- 내가 선택한 끝 날짜가 들어가는 곳 --></p>
                      </div>
                  </form>
              </div>
@@ -58,15 +59,15 @@
          var month = date.getMonth(); // 현재 로컬 시간의 월을 구한다.
          //var nowDate = date.getDate(); // 현재 '일'
          //var nowDay = date.getDay(); // 현재 '요일', 0부터 시작 (0-일요일, 1-월요일 ...)
-         dateFunc.monthView(year, month);
+         dateDraw.monthView(year,month);
 
          $("#month").click(function(e){ // '월' 을 눌렀을 경우
              flag = 1;
              e.preventDefault();
-             date = new Date();
+             date = new Date(); // 현재 로컬 시간
              year = date.getFullYear(); // 현재 로컬 시간의 년도를 구한다.
              month = date.getMonth();
-             dateFunc.monthView(year, month);
+             dateDraw.monthView(year, month);
          }); // month End
 
          $("#week").click(function(e){ // '주'를 눌렀을 경우
@@ -75,7 +76,7 @@
 
              date = new Date(); // 현재 날짜 구하기
              date.setDate(date.getDate() - date.getDay()); // 현재 날짜의 첫 주 구하기
-             dateFunc.weekView(date, 0); // 첫 주를 구했기 때문에 더할 숫자가 없다.
+             dateDraw.weekView(date, 0); // 첫 주를 구했기 때문에 더할 숫자가 없다.
          }); // week End
 
          $('#prev').click(function(e){
@@ -86,12 +87,12 @@
                      year = year - 1;
                      month = 11; // 12월 값이다.
                  }
-                 dateFunc.monthView(year, month);
+                 dateDraw.monthView(year, month);
              }
              else
              {
                  e.preventDefault();
-                 dateFunc.weekView(date, -1); // 현재 주간 일요일에서 이전 주간의 일요일 날짜를 구하기 위해 -1이 필요!
+                 dateDraw.weekView(date, -1); // 현재 주간 일요일에서 이전 주간의 일요일 날짜를 구하기 위해 -1이 필요!
              }
          }); // prev End
 
@@ -103,14 +104,19 @@
                      year = year + 1;
                      month = 0; // 1월 값이다.
                  }
-                 dateFunc.monthView(year, month);
+                 dateDraw.monthView(year, month);
              }
              else { // '주' 버튼 클릭 시
                  e.preventDefault();
-                 dateFunc.weekView(date, 1); // 현재 주간 일요일에서 다음 주간 일요일 날짜를 구하기 위해 +1이 필요!
+                 dateDraw.weekView(date, 1); // 현재 주간 일요일에서 다음 주간 일요일 날짜를 구하기 위해 +1이 필요!
              }
          }); // next End
 
+
+         $("#sch_reg_btn").click(function(e){ // '일정 등록' 버튼을 눌렀을 때
+             e.preventDefault();
+             mouseEvent.scheduleInsert(); // ajax 호출
+         }); // sch_reg_btn End
 
        /*  var strDate;
          var endDate;
@@ -137,102 +143,3 @@
      });
  </script>
 
- <script type="text/javascript">
-     function init() {
-         $("#calendar_body tr td")
-             .mousedown(rangeMouseDown)
-             .mouseup(rangeMouseUp)
-             .mousemove(rangeMouseMove);
-     }
-
-     var dragStart = 0;
-     var dragEnd = 0;
-     var isDragging = false;
-     var strDate;
-     var endDate;
-
-     function rangeMouseDown(e) {
-         if (isRightClick(e)) {
-             return false;
-         } else {
-             var allCells = $("#calendar_body tr td");
-             dragStart = allCells.index($(this));
-             isDragging = true;
-
-             strDate = e.target.textContent; // 마우스 드래그 시작 날짜 가져오기!!
-
-             if (typeof e.preventDefault != 'undefined') { e.preventDefault(); }
-             document.documentElement.onselectstart = function () { return false; };
-         }
-     }
-
-     function rangeMouseUp(e) {
-         if (isRightClick(e)) {
-             return false;
-         } else {
-             var allCells = $("#calendar_body tr td");
-             dragEnd = allCells.index($(this));
-
-             endDate = e.target.textContent; // 마우스 드래그 제일 끝 날짜 가져오기!!
-             $("#scheduleTime").html(strDate + " ~ " + endDate); // 해당 기간을 p 태그에 출력!
-             $("#scheduleModal").modal('show'); // show 모달!
-
-             isDragging = false;
-             if (dragEnd != 0) {
-                 selectRange();
-             }
-
-             document.documentElement.onselectstart = function () { return true; };
-         }
-     }
-
-     function rangeMouseMove(e) {
-         if (isDragging) {
-             var allCells = $("#calendar_body tr td");
-             dragEnd = allCells.index($(this));
-             selectRange();
-         }
-     }
-
-     function selectRange() {
-         $("#calendar_body tr td").removeClass('selected');
-         if (dragEnd + 1 < dragStart) { // reverse select
-             $("#calendar_body tr td").slice(dragEnd, dragStart + 1).addClass('selected');
-         } else {
-             $("#calendar_body tr td").slice(dragStart, dragEnd + 1).addClass('selected');
-         }
-     }
-
-     function isRightClick(e) {
-         if (e.which) {
-             return (e.which == 3);
-         } else if (e.button) {
-             return (e.button == 2);
-         }
-         return false;
-     }
-
-     $("#sch_reg_btn").click(function(e){ // '일정 등록' 버튼을 눌렀을 때
-         e.preventDefault();
-         var data = {
-             content : $("#scheduleContent").val(),
-             strDate : strDate,
-             endDate : endDate
-         };
-         $.ajax({
-             url : 'http://calendar.kr/calendar/register', // 호출할 컨트롤러의 메소드
-             data : data,
-             type : 'post',
-             dataType : 'json',
-             success : function(data) {
-                 alert(data.check);
-                 $("#scheduleModal").modal('hide'); // 일정 등록이 끝났으면 hide!
-                 $("#scheduleContent").val(""); // 해당 텍스트 박스 값 바꾸기
-             },
-             error : function() {
-                alert("error");
-             }
-         });
-     }); // sch_reg_btn End
-
- </script>

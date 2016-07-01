@@ -16,7 +16,6 @@
 
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 
-
     <!--<script src = "../user_guide/_static/js/jquery-3.0.0.min.js"></script>-->
 
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>

@@ -43,7 +43,5 @@ class Calendar extends CI_Controller
 
         /* json 으로 encode 하여 .ajax에게 리턴~ (echo를 써줘야한다!) */
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
-
-
     }
 }
