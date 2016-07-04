@@ -1,29 +1,53 @@
 var dateObj = (function (){
 
     return {
-        getStartDay : function(year, month){ // 해당 달의 시작 일을 구한다.
+        getMonthStart : function(year, month){ // 해당 '월'의 시작 '일'(1일)을 구한다.
             var date = new Date();
-            date.setFullYear(year);
-            date.setMonth(month);
-            date.setDate(1);
-            return date // 해당 year, month의 시작 요일을 구해서 리턴한다.
-        } // getStartDate End
+            date.setDate(year, month, 1); // 현재 시간을 현재 '월'의 1일로 세팅
+
+            var monthStartSunDay = date.setDate(date.getDate() - date.getDay()); // 현재 '월'의 1일 - 현재 '월'의 시작요일 == 현재 '월'의 첫 주 일요일
+            return monthStartSunDay; //
+        }, // getMonthStart End
     }
 
 })(); // dateObj 모듈 End
 
 var dateDraw = (function () {
-    var date;
+
+    var monthView = function (year, month, num) { // 현재 '월'을 구하는 함수
+        month = month + num; // 현재 '월' 인지, 이전 '월' 인지, 다음 '월' 인지 구분한다. (0, -1, 1 값이 num 값으로 온다)
+
+        if (month == -1) { // 현재 year(연도)에서 더이상 이전 클릭 할 '월'이 존재하지 않으면 12월을 뜻하는 11로 바꿔준다.
+            year = year - 1; // 1년 감소
+            month = 11;
+        } else if (month == 12) { // 현재 year(연도)에서 더이상 다음 클릭 할 '월'이 존재하지 않으면 1월을 뜻하는 0으로 바꿔준다.
+            year = year + 1; // 1년 증가
+            month = 0;
+        }
+
+        var date = dateObj.getMonthStart(year, month); // 현재 '월'의 첫 주차 일요일로 세팅된 date 값을 가져온다..
+
+        var view = '<tr>';
+        // 7 * 6으로 고정된 달력을 만들도록해보자.
+        for (var i = 1; i <=6; i++) {
+            for (var j = 1; j <= 7; j++) {
+                var temp = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+            }
+        }
+    };
+
+    var weekView = function (date, week) {
+        var weekStart = date.setDate(date.getDate() + week * 7); // 주간의 시작 '일요일'로 세팅! (week 값은 0, -1, 1 값으로 현재, 이전 다음 주의 일요일 세팅을 하기 위한 값이다.)
+    };
 
     return {
-        monthView : function() { // '월' 달력을 그려주기 위한 함수
+        monthView : function (year, month, num) { // '월' 달력을 그려주기 위한 함수
 
             mouseEvent.init(); // tbody에 마우스 이벤트 연결
         }, // monthView End
 
-        weekView : function(week) { // '주' 달력을 그려주기 위한 함수
-            date.setDate(date.getDate()+ week * 7); // 현재 주간의 시작 '일요일'로 세팅!
-
+        weekView : function(date, week) { // '주' 달력을 그려주기 위한 함수
+            weekView(date, week);
         }, //weekView End
     }
 
