@@ -114,31 +114,15 @@
 
          $("#sch_reg_btn").click(function(e){ // '일정 등록' 버튼을 눌렀을 때
              e.preventDefault();
-             ajaxFunc.scheduleInsert(); // ajax 호출
+             ajaxFunc.scheduleInsert(flag); // ajax 호출
+             if (flag == 2) {
+                 dateDraw.weekView(dateDraw.getWeekData(), 0);
+             }
          }); // sch_reg_btn End
 
-       /*  var strDate;
-         var endDate;
-         $('#calendar_body tr td').on({
-            mousedown : function(e){
-                strDate = e.target.textContent; // 클릭한 td의 값을 가져온다.
-                //console.log(e.target.textContent);
-            },
-             mouseup : function(e){
-                 endDate = e.target.textContent; // 클릭한 td의 값을 가져온다.
-                 $("#scheduleTime").html(strDate + " ~ " + endDate); // 해당 기간을 p 태그에 출력!
-                 $("#scheduleModal").modal('show'); // show 모달!
-                 //console.log(e.target);
-
-             }
-         });*/
-
-         /*$("#calendar_body").selectable({ // 달력에서 내가 날짜를 선택했을 경우
-            stop : function(){ // 드래그 해서 날짜를 선택했을 경우
-                $("#scheduleModal").modal('show'); // show 모달!
-            }
-         }); // calendar body End*/
-
+         $(".btn").click(function(e) {
+             $("#calendar_body tr td").removeClass('selected'); // 선택되어 있는 td에 있는 백그라운드 값을 없애버린다.
+         });
      });
  </script>
 

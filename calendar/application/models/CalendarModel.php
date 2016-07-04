@@ -15,8 +15,9 @@ class CalendarModel extends CI_Model
 
     public function scheduleSelect($strDate)
     {
-        $query = $this->db->get_where('calendar', array('start_date' => $strDate));
+       $query = $this->db->get_where('calendar', array('start_date' => $strDate));
 
+       // $query = "SELECT * FROM WHERE start_date=" + $strDate;
         return $query->result();
     }
 
