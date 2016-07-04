@@ -135,7 +135,7 @@ var dateDraw = (function () {
                     if (today == temp) // 오늘 날짜와 td에 들어갈 날짜가 같으면 (즉, 달력에 뿌려질 날짜가 오늘이면)
                     {
                         view += '<td style="background-color: gray;">';
-                        view += '<div>'+ "123" +'</div>';
+                        view += '<div>'+ "456" +'</div>';
                     }
                     else
                     {
@@ -178,7 +178,7 @@ var mouseEvent = (function () {
     var strDate;
     var endDate;
 
-    function rangeMouseDown (e) {
+    function mouseDown (e) {
         if (isRightClick(e)) {
             return false;
         } else {
@@ -186,43 +186,49 @@ var mouseEvent = (function () {
             dragStart = allCells.index($(this));
             isDragging = true;
 
-            strDate = e.target.textContent; // 마우스 드래그 시작 날짜 가져오기!!
+            //strDate = e.target.textContent; // 마우스 드래그 시작 날짜 가져오기!!
+            mouseEvent.setStrDate(e);
 
             if (typeof e.preventDefault != 'undefined') { e.preventDefault(); }
             document.documentElement.onselectstart = function () { return false; };
         }
     }
 
-    function rangeMouseUp(e) {
+    function mouseUp(e) {
         if (isRightClick(e)) {
             return false;
         } else {
             var allCells = $("#calendar_body tr td");
             dragEnd = allCells.index($(this));
 
-            endDate = e.target.textContent; // 마우스 드래그 제일 끝 날짜 가져오기!!
+            //endDate = e.target.textContent; // 마우스 드래그 제일 끝 날짜 가져오기!!
+            mouseEvent.setEndDate(e);
             $("#scheduleStart").html(strDate); // 해당 기간을 p 태그에 출력!
             $("#scheduleEnd").html(endDate); // 해당 기간을 p 태그에 출력!
             $("#scheduleModal").modal('show'); // show 모달!
 
             isDragging = false;
             if (dragEnd != 0) {
-                selectRange();
+                drawScope();
             }
 
             document.documentElement.onselectstart = function () { return true; };
         }
     }
 
-    function rangeMouseMove(e) {
+    function mouseMove(e) {
         if (isDragging) {
             var allCells = $("#calendar_body tr td");
             dragEnd = allCells.index($(this));
-            selectRange();
+            drawScope();
         }
     }
 
-    function selectRange() {
+    function mouseLeave(e) { // 마우스가 td 밖으로 이동하면 백그라운드 모두 삭제!
+            $("#calendar_body tr td").removeClass('selected');
+    }
+
+    function drawScope() { // 선택된 부분들에 배경 색칠하기!
         $("#calendar_body tr td").removeClass('selected');
         if (dragEnd + 1 < dragStart) { // reverse select
             $("#calendar_body tr td").slice(dragEnd, dragStart + 1).addClass('selected');
@@ -231,7 +237,7 @@ var mouseEvent = (function () {
         }
     }
 
-    function isRightClick(e) {
+    function isRightClick(e) { // 마우스 우클릭 방지
         if (e.which) {
             return (e.which == 3);
         } else if (e.button) {
@@ -240,11 +246,44 @@ var mouseEvent = (function () {
         return false;
     }
 
+    return { // 아래 init과 scheduleInsert는 어디서든지 접근할 수 있는 publick이 됨
+        init: function () { // monthView와 weekView에서 호출해야되므로 public으로!
+            $("#calendar_body tr td")
+                .mousedown(mouseDown)
+                .mouseup(mouseUp)
+                .mousemove(mouseMove)
+                .mouseleave(mouseLeave);
+        },
+
+        // 일정 시작일과 끝일을 getter / setter 로 만들어 놓는다.
+        setStrDate : function(e) {
+          strDate = e.target.textContent;
+        },
+
+        getStrDate : function() {
+          return strDate;
+        },
+
+        setEndDate : function(e) {
+          endDate = e.target.textContent;
+        },
+
+        getEndDate : function() {
+          return endDate;
+        },
+
+
+    };
+
+})(); // mouseEvent 모듈 End
+
+var ajaxFunc = (function () {
+
     var scheduleReg = function () {
         var data = {
             content : $("#scheduleContent").val(),
-            strDate : strDate,
-            endDate : endDate
+            strDate : mouseEvent.getStrDate(), // mouseEvent에 등록된 일정 시작일과 끝일을 가지고 온다.
+            endDate : mouseEvent.getEndDate()
         };
         $.ajax({
             url : 'http://calendar.kr/calendar/scheduleSet', // 호출할 컨트롤러의 메소드
@@ -262,17 +301,10 @@ var mouseEvent = (function () {
         });
     };
 
-    return { // 아래 init과 scheduleInsert는 어디서든지 접근할 수 있는 publick이 됨
-        init: function () { // monthView와 weekView에서 호출해야되므로 public으로!
-            $("#calendar_body tr td")
-                .mousedown(rangeMouseDown)
-                .mouseup(rangeMouseUp)
-                .mousemove(rangeMouseMove);
-        },
-
+    return {
         scheduleInsert : function () { // '일정등록' 버튼 클릭 시 호출되야해서 publick으로 해주고 내부 함수인 scheduleReg()를 호출되게 한다.
             scheduleReg();
         }
-    };
+    }
 
-})(); // mouseEvent 모듈 End
+})(); // ajaxFunc 모듈 End

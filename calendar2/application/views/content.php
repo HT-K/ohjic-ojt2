@@ -54,20 +54,12 @@
      $(function(){
          var flag = 1; // '월' 버튼 상태일 경우 , '주' 버튼 상태일 경우 2로바꾸자
 
-         var date = new Date();
-         var year = date.getFullYear(); // 현재 로컬 시간의 년도를 구한다.
-         var month = date.getMonth(); // 현재 로컬 시간의 월을 구한다.
-         //var nowDate = date.getDate(); // 현재 '일'
-         //var nowDay = date.getDay(); // 현재 '요일', 0부터 시작 (0-일요일, 1-월요일 ...)
-         dateDraw.monthView(year,month);
+         dateDraw.monthView();
 
          $("#month").click(function(e){ // '월' 을 눌렀을 경우
              flag = 1;
              e.preventDefault();
-             date = new Date(); // 현재 로컬 시간
-             year = date.getFullYear(); // 현재 로컬 시간의 년도를 구한다.
-             month = date.getMonth();
-             dateDraw.monthView(year, month);
+             dateDraw.monthView();
          }); // month End
 
          $("#week").click(function(e){ // '주'를 눌렀을 경우

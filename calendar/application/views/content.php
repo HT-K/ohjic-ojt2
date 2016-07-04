@@ -114,7 +114,7 @@
 
          $("#sch_reg_btn").click(function(e){ // '일정 등록' 버튼을 눌렀을 때
              e.preventDefault();
-             mouseEvent.scheduleInsert(); // ajax 호출
+             ajaxFunc.scheduleInsert(); // ajax 호출
          }); // sch_reg_btn End
 
        /*  var strDate;
