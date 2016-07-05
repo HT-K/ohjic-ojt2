@@ -1,0 +1,36 @@
+#wrap {
+    width: 100%;
+}
+
+#day_list th {
+    text-align: center;
+}
+
+.calendar_main {
+    width: 100%;
+    border: 1px solid #999999;
+}
+
+.calendar_main td {
+    width: 200px;
+    text-align: center;
+    border-right: 1px solid #999999;
+    border-bottom: 1px solid #999999;
+}
+
+.calendar_main tr {
+    height: 250px;
+}
+
+#calendar_body tr .ui-selecting {
+    background: #FECA40;
+}
+
+#calendar_body tr .ui-selected {
+    background: #F39814; color: white;
+}
+
+
+#calendar_body td.selected {
+    background-color: #FECA40;
+}

@@ -273,7 +273,7 @@ var mouseEvent = (function () {
 
         getEndDate : function() {
           return endDate;
-        },
+        }
 
 
     };

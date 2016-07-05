@@ -75,19 +75,29 @@
              dateDraw.weekView(date, 0); // 첫 주를 구했기 때문에 더할 숫자가 없다.
          }); // week End
 
-         $('#prev').click(function(e){
+         $('#prev').click(function(e){ // '이전' 버튼 누를 경우
              e.preventDefault();
              if (flag == 1) {
-                 dateDraw.monthView(year, month, -1);
+                 month = month - 1; // 이전이니까 월을 -1
+                 if (month == -1) { // 현재 년도에서 더이상 이전 할 월이 없으면
+                     year = year - 1;
+                     month = 11; // 12월 값이다.
+                 }
+                 dateDraw.monthView(year, month);
              } else {
                  dateDraw.weekView(date, -1); // 현재 주간 일요일에서 이전 주간의 일요일 날짜를 구하기 위해 -1이 필요!
              }
          }); // prev End
 
-         $("#next").click(function(e){
-             e.preventDefault();-
+         $("#next").click(function(e){ // '다음' 버튼 누를 경우
+             e.preventDefault();
              if (flag == 1) { // '월' 버튼 클릭 시
-                 dateDraw.monthView(year, month, 1);
+                 month = month + 1;
+                 if (month == 12) {
+                     year = year + 1;
+                     month = 0; // 1월 값이다.
+                 }
+                 dateDraw.monthView(year, month);
              } else { // '주' 버튼 클릭 시
                  dateDraw.weekView(date, 1); // 현재 주간 일요일에서 다음 주간 일요일 날짜를 구하기 위해 +1이 필요!
              }
@@ -96,8 +106,14 @@
 
          $("#sch_reg_btn").click(function(e){ // '일정 등록' 버튼을 눌렀을 때
              e.preventDefault();
-             mouseEvent.scheduleInsert(); // ajax 호출
+             ajaxFunc.scheduleInsert(flag); // ajax 호출
          }); // sch_reg_btn End
+
+         $(".btn").click(function(e) { // 선택됨을 표시한 td 오렌지 배경색을 없애주기 위함
+             e.preventDefault();
+             $("#calendar_body tr td").removeClass('selected');
+         });
+
      });
  </script>
 
