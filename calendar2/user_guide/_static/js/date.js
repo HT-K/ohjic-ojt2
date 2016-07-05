@@ -25,9 +25,9 @@ var dateDraw = (function () {
             for (var j = 1; j <= 7; j++) {
                 var temp = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
                 if (today == temp) { // 오늘 날짜와 td에 들어갈 날짜가 같으면 (즉, 달력에 뿌려질 날짜가 오늘이면)
-                    view += '<td style="background-color : gray;">';
+                    view += '<td style="background-color : gray;" data-cal="'+temp+'">';
                 } else {
-                    view += '<td>';
+                    view += '<td data-cal="'+temp+'">';
                 }
 
                 if(tempDay == 0) //요일이 일요일 일때 글씨색을 붉은색으로 한다.
@@ -42,7 +42,7 @@ var dateDraw = (function () {
                 }
                 else //평일 일때 글씨색을 검정색으로 한다.
                 {
-                    view += ''+ temp +'</td>';
+                    view += temp +'</td>';
                     tempDay++;
                 }
 
@@ -63,7 +63,6 @@ var dateDraw = (function () {
 
         $("#ym").html(ym);
         $("#calendar_body").html(view);
-        mouseEvent.init(); // tbody에 마우스 이벤트 연결
     }; // monthView() End
 
     var weekView = function (date, week) {
@@ -80,14 +79,14 @@ var dateDraw = (function () {
             temp = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
             if (today == temp) // 오늘 날짜와 td에 들어갈 날짜가 같으면 (즉, 달력에 뿌려질 날짜가 오늘이면)
             {
-                view += '<td style="background-color: gray;">';
+                view += '<td style="background-color: gray;" data-cal="'+temp+'">';
             }
             else
             {
-                view += '<td>';
+                view += '<td data-cal="'+temp+'">';
             }
 
-            view +='<div class="selDate">' + temp + '</div>' +'</td>';
+            view += temp +'</td>';
             date.setDate(date.getDate() + 1); // 해당 일 기준으로 다음날로 세팅
         }
         view += '</tr>';
@@ -102,16 +101,19 @@ var dateDraw = (function () {
 
         $("#ym").html(title);
         $("#calendar_body").html(view);
-        mouseEvent.init(); // tbody에 마우스 이벤트 연결
+
     }; // weekView() End
 
     return {
         monthView : function (year, month) { // '월' 달력을 그려주기 위한 함수
             monthView(year, month);
+            mouseEvent.init(); // tbody에 마우스 이벤트 연결
+
         }, // monthView End
 
         weekView : function(date, week) { // '주' 달력을 그려주기 위한 함수
             weekView(date, week);
+            mouseEvent.init(); // tbody에 마우스 이벤트 연결
         }, //weekView End
     }
 
@@ -131,7 +133,7 @@ var mouseEvent = (function () {
             var allCells = $("#calendar_body tr td");
             dragStart = allCells.index($(this));
             isDragging = true;
-
+            //console.log($(e.target).data("cal"));
             mouseEvent.setStrDate(e); // 마우스 드래그 시작 날짜 가져오기!!
 
             if (typeof e.preventDefault != 'undefined') { e.preventDefault(); }
@@ -145,11 +147,12 @@ var mouseEvent = (function () {
         } else {
             var allCells = $("#calendar_body tr td");
             dragEnd = allCells.index($(this));
-
             mouseEvent.setEndDate(e); // 마우스 드래그 제일 끝 날짜 가져오기!!
+
             $("#scheduleStart").html(strDate); // 해당 기간을 p 태그에 출력!
             $("#scheduleEnd").html(endDate); // 해당 기간을 p 태그에 출력!
             $("#scheduleModal").modal('show'); // show 모달!
+
 
             isDragging = false;
             if (dragEnd != 0) {
@@ -196,9 +199,9 @@ var mouseEvent = (function () {
 
         // 일정 시작일과 끝일을 getter / setter 로 만들어 놓는다.
         setStrDate : function(e) {
-            //strDate = e.target.textContent;
-            //console.log($(e.target).children(".selDate"));
-            strDate = $(e.target).children(".selDate")[0].textContent; // 날짜 값 가져와서 설정!
+            //.log($(e.target).children(".selDate")[0].innerText);
+            //strDate = $(e.target).children(".selDate")[0].innerText; // 날짜 값 가져와서 설정!
+            strDate = $(e.target).data("cal");
         },
 
         getStrDate : function() {
@@ -206,8 +209,8 @@ var mouseEvent = (function () {
         },
 
         setEndDate : function(e) {
-            //console.log($(e.target).children(".selDate"));
-            endDate = $(e.target).children(".selDate")[0].textContent;
+            //endDate = $(e.target).children(".selDate")[0].innerText;
+            endDate = $(e.target).data("cal");
         },
 
         getEndDate : function() {
@@ -218,7 +221,7 @@ var mouseEvent = (function () {
 })(); // mouseEvent 모듈 End
 
 var ajaxFunc = (function () {
-    var view; // month 혹은 week의 내용을 담는 변수
+    var view; // month 혹은 week의 view 내용을 백업하는 변수
 
     var scheduleInsert = function (flag) {
         var data = {
@@ -233,8 +236,6 @@ var ajaxFunc = (function () {
             dataType : 'json',
             success : function(data) {
                 alert(data.check);
-                $("#scheduleModal").modal('hide'); // 일정 등록이 끝났으면 hide!
-                $("#scheduleContent").val(""); // 해당 텍스트 박스 값 바꾸기
             },
             error : function() {
                 alert("error");
@@ -255,20 +256,19 @@ var ajaxFunc = (function () {
 
                 if (today == temp) // 오늘 날짜와 td에 들어갈 날짜가 같으면 (즉, 달력에 뿌려질 날짜가 오늘이면)
                 {
-                    v += '<td style="background-color: gray;">';
+                    v += '<td style="background-color: gray;" data-cal="'+temp+'">';
                 }
                 else
                 {
-                    v += '<td>';
+                    v += '<td data-cal="'+temp+'">';
                 }
 
                 if (data.cal.length > 0) { // 일정이 있는 날이면
                     for (var i = 0; i < data.cal.length; i++) {
-                        v += '<div style="width: 100%; height:20px; background-color: orange;">'+ data.cal[i].content +'</div>';
+                        v += '<div class="schIn" style="width: 100%; height:20px; background-color: orange;">'+ data.cal[i].content +'</div>';
                     }
                 }
-
-                v +='<div class="selDate">' + temp + '</div>' +'</td>';
+                v += temp +'</td>';
                 ajaxFunc.setView(v);
             },
             error: function () {

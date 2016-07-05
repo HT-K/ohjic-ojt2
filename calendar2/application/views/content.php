@@ -111,7 +111,14 @@
 
          $(".btn").click(function(e) { // 선택됨을 표시한 td 오렌지 배경색을 없애주기 위함
              e.preventDefault();
+             $("#scheduleModal").modal('hide'); // 일정 등록이 끝났으면 hide!
+             $("#scheduleContent").val(""); // 해당 텍스트 박스 값 바꾸기
              $("#calendar_body tr td").removeClass('selected');
+         });
+
+         $(".schIn").mouseover(function(e){
+             e.preventDefault();
+
          });
 
      });
