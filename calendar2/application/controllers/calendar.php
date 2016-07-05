@@ -28,7 +28,8 @@ class Calendar extends CI_Controller
     public function scheduleGet()
     {
         $startDate = $this->input->post('strDate');
-        $result = $this->CalendarModel->scheduleSelect($startDate);
+        $endDate = $this->input->post('endDate');
+        $result = $this->CalendarModel->scheduleSelect($startDate, $endDate);
         $ret = array (
             'cal' => $result
         );

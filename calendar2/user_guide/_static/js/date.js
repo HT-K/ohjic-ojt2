@@ -12,6 +12,8 @@ var dateObj = (function (){
 
 var dateDraw = (function () {
     var nowDate; // 현재 주간화면을 백업해놓기 위한 변수
+    var calendarStart;
+    var calendarEnd;
 
     var monthView = function (year, month) { // 현재 '월'을 구하는 함수
         var today = new Date();
@@ -73,27 +75,21 @@ var dateDraw = (function () {
         var today = new Date();
         today = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate(); // 현재 날짜에 배경색을 칠하기 위해 미리 구해놓음.
 
-        var calendarStart = date.getFullYear() + "년 " + (date.getMonth() + 1) + "월 " + date.getDate() + "일 ~ "; // 주간 시작 날짜
+        calendarStart = date.getFullYear() + "년 " + (date.getMonth() + 1) + "월 " + date.getDate() + "일 ~ "; // 주간 시작 날짜
         $("#calendarStart").text(calendarStart);
-        var temp = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate(); // 현재 주간의 '일요일' 이다.
+        calendarStart = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+        date.setDate(date.getDate() + 6); // 다시 현재 주간의 토요일로 세팅
+        calendarEnd = date.getFullYear()+"년 " + (date.getMonth()+1) +"월 " + date.getDate() +"일"; // 주간 끝 날짜
+        $("#calendarEnd").html(calendarEnd);
+        calendarEnd = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+        date.setDate(date.getDate() - 6); // 다시 현재 주간의 일요일로 세팅
 
         // 세팅된 현재 주간의 일요일 날짜부터 토요일날짜까지 +1 씩 해주면서 td에 세팅한다.
         var view = '<tr>';
-        for (var i = 0; i < 7; i++) {
-            temp = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-            view += ajaxFunc.getView(today, temp, date);
-            date.setDate(date.getDate() + 1); // 해당 일 기준으로 다음날로 세팅
-        }
+        view += ajaxFunc.getView(today, date);
         view += '</tr>';
 
-        date.setDate(date.getDate() - 1); // 늘어난 1일을 잠시 -1 해서 세팅 (주간 달력에 글씨 띄우기 위함)
-
-        var calendarEnd = date.getFullYear()+"년 " + (date.getMonth()+1) +"월 " + date.getDate() +"일"; // 주간 끝 날짜
-        $("#calendarEnd").html(calendarEnd);
-        date.setDate(date.getDate() + 1);
-
-        date.setDate(date.getDate() - 7); // 다시 현재 주간의 일요일로 세팅
-
+        date.setDate(date.getDate() - 7); // 다시 현재 주간의 일요일로 세팅, 대체 왜 해줘야하는거지?
 
         $("#calendar_body").html(view);
 
@@ -117,6 +113,14 @@ var dateDraw = (function () {
 
         getWeekData : function() {
             return nowDate;
+        },
+
+        getCalendarStart : function () { // 캘린더 시작 날짜 리턴!
+            return calendarStart;
+        },
+
+        getCalendarEnd : function () { // 캘린더 끝 날짜 리턴!
+            return calendarEnd;
         }
     }
 
@@ -331,33 +335,40 @@ var ajaxFunc = (function () {
 
     };
 
-    var weekSchedule = function(today, temp, date) {
-
+    var weekSchedule = function(today, date) {
         $.ajax({
             url: 'http://calendar2.kr/calendar/scheduleGet', // 호출할 컨트롤러의 메소드
-            data: {strDate: temp},
+            data: { strDate : dateDraw.getCalendarStart(), // mouseEvent에 등록된 일정 시작일과 끝일을 가지고 온다.
+                     endDate : dateDraw.getCalendarEnd() },
             type: 'post',
             dataType: 'json',
             async: false, // ajax 실행을 동기적으로 하겠다는 의미 (ajax는 비동기적 호출을 위한 함수로 하나의 작업 실행 후 다른 작업이 자동으로 실행되게 된다)
             success: function (data) {
                 var v = ''; // 해당 일(temp)의 td를 만들기 위한 변수
 
-                if (today == temp) // 오늘 날짜와 td에 들어갈 날짜가 같으면 (즉, 달력에 뿌려질 날짜가 오늘이면)
-                {
-                    v += '<td style="background-color: gray;" data-year="'+date.getFullYear()+'" data-month="'+(date.getMonth()+1)+'" data-day="'+date.getDate()+'" data-cal="'+temp+'">';
-                }
-                else
-                {
-                    v += '<td data-cal="'+temp+'">';
-                }
+                for (var i = 0; i < 7; i++) {
 
-                if (data.cal.length > 0) { // 일정이 있는 날이면
-                    for (var i = 0; i < data.cal.length; i++) {
-                        v += '<div class="schIn" style="width: 100%; background-color: orange;" data-seq="'+data.cal[i].seq+'">'+ data.cal[i].content +'</div>';
+                    var temp = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
 
+                    if (today == temp) // 오늘 날짜와 td에 들어갈 날짜가 같으면 (즉, 달력에 뿌려질 날짜가 오늘이면)
+                    {
+                        v += '<td style="background-color: gray;" data-year="'+date.getFullYear()+'" data-month="'+(date.getMonth()+1)+'" data-day="'+date.getDate()+'" data-cal="'+temp+'">';
                     }
-                }
-                v += date.getDate() +'</td>';
+                    else
+                    {
+                        v += '<td data-cal="'+temp+'">';
+                    }
+
+                    for (var j = 0; j < data.cal.length; j++) {
+                        if (data.cal[j].start_date == temp) { // 일정이 있는 날이면
+                            v += '<div class="schIn" style="width: 100%; background-color: orange;" data-seq="'+data.cal[j].seq+'">'+ data.cal[j].content +'</div>';
+                        }
+                    }
+
+                    v += date.getDate() +'</td>';
+
+                    date.setDate(date.getDate() + 1); // 해당 일 기준으로 다음날로 세팅
+                 }
                 ajaxFunc.setView(v);
             },
             error: function () {
@@ -387,8 +398,8 @@ var ajaxFunc = (function () {
             view = v;
         },
 
-        getView : function (today, temp, date) {
-            weekSchedule(today, temp, date);
+        getView : function (today, date) {
+            weekSchedule(today, date);
             return view;
         }
     }

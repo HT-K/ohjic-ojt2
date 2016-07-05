@@ -13,9 +13,13 @@ class CalendarModel extends CI_Model
         parent::__construct();
     }
 
-    public function scheduleSelect($strDate)
+    public function scheduleSelect($strDate, $endDate)
     {
-        $query = $this->db->get_where('calendar', array('start_date' => $strDate));
+        //$query = $this->db->get_where('calendar', array('start_date' => $strDate));
+
+        $sql = "SELECT * FROM calendar where start_date  between ? and ?";
+
+        $query = $this->db->query($sql, array($strDate, $endDate));
 
         return $query->result();
     }
