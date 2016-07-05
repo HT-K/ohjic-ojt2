@@ -139,7 +139,6 @@
              ajaxFunc.scheduleInsert(); // ajax 호출
              if (flag == 2) {
                  dateDraw.weekView(dateDraw.getWeekData(), 0);
-             } else {
              }
          }); // sch_reg_btn End
 
