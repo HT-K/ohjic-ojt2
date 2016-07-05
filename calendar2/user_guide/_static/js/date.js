@@ -14,57 +14,30 @@ var dateDraw = (function () {
     var nowDate; // 현재 주간화면을 백업해놓기 위한 변수
     var calendarStart;
     var calendarEnd;
+    var backUpYear;
+    var backUpMonth;
 
     var monthView = function (year, month) { // 현재 '월'을 구하는 함수
+        backUpYear = year;
+        backUpMonth = month;
+
         var today = new Date();
         today = today.getFullYear()+ "-" + (today.getMonth()+1) + "-" + today.getDate(); // 현재 날짜에 배경색을 칠하기 위해 미리 구해놓음.
         var date = dateObj.getMonthStart(year, month); // 현재 '월'의 첫 주차 일요일로 세팅된 date 값을 가져온다.
-        var calendarStart = date.getFullYear() + "년 " + (date.getMonth() + 1) + "월 " + date.getDate() + "일 ~ "; // 주간 시작 날짜
+
+        calendarStart = date.getFullYear() + "년 " + (date.getMonth() + 1) + "월 " + date.getDate() + "일 ~ "; // 주간 시작 날짜
         $("#calendarStart").text(calendarStart);
+        calendarStart = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+        date.setDate(date.getDate() + 41); // 다시 현재 '달'의 마지막날로 지정
+        calendarEnd = date.getFullYear()+"년 " + (date.getMonth()+1) +"월 " + date.getDate() +"일"; // 주간 끝 날짜
+        $("#calendarEnd").html(calendarEnd);
+        calendarEnd = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+        date.setDate(date.getDate() - 41); // 다시 현재 '달'의 시작일로 지정
+
         var tempDay = date.getDay(); // 현재 요일, 1일씩 증가시킬 것이다 (토요일과 일요일 색을 달리하기 위함)
 
         var view = '<tr>'; // 한 주에 하나씩
-        // 7 * 6으로 고정된 달력을 만들도록해보자.
-        for (var i = 1; i <=6; i++) {
-            for (var j = 1; j <= 7; j++) {
-                var temp = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-                if (today == temp) { // 오늘 날짜와 td에 들어갈 날짜가 같으면 (즉, 달력에 뿌려질 날짜가 오늘이면)
-                    view += '<td style="background-color : gray;" data-cal="'+temp+'">';
-                } else {
-                    view += '<td data-cal="'+temp+'">';
-                }
-
-                if(tempDay == 0) //요일이 일요일 일때 글씨색을 붉은색으로 한다.
-                {
-                    view += '<font color="red">'+ temp +'</font></td>';
-                    tempDay++;
-                }
-                else if(tempDay == 6) //요일이 토요일 일때 글씨색을 파란색으로 한다.
-                {
-                    view += '<font color="blue">'+ temp +'</font></td>';
-                    tempDay++;
-                }
-                else //평일 일때 글씨색을 검정색으로 한다.
-                {
-                    view += temp +'</td>';
-                    tempDay++;
-                }
-
-                if(tempDay > 6) //테이블의 새로운 행을 추가하도록 한다.
-                {
-                    tempDay = 0;
-                    view += '</tr>';
-                    view += '<tr>';
-                }
-
-                date.setDate(date.getDate() + 1); // 1일 증가!
-            }
-        }
-
-        date.setDate(date.getDate() - 1); // 늘어난 1일을 잠시 -1 해서 세팅 (주간 달력에 글씨 띄우기 위함)
-
-        var calendarEnd  = date.getFullYear()+"년 " + (date.getMonth()+1) +"월 " + date.getDate() +"일"; // 주간 끝 날짜
-        $("#calendarEnd").html(calendarEnd);
+        view += ajaxFunc.getMonthView(today, tempDay, date);
 
         $("#calendar_body").html(view);
     }; // monthView() End
@@ -86,7 +59,7 @@ var dateDraw = (function () {
 
         // 세팅된 현재 주간의 일요일 날짜부터 토요일날짜까지 +1 씩 해주면서 td에 세팅한다.
         var view = '<tr>';
-        view += ajaxFunc.getView(today, date);
+        view += ajaxFunc.getWeekView(today, date);
         view += '</tr>';
 
         date.setDate(date.getDate() - 7); // 다시 현재 주간의 일요일로 세팅, 대체 왜 해줘야하는거지?
@@ -121,6 +94,14 @@ var dateDraw = (function () {
 
         getCalendarEnd : function () { // 캘린더 끝 날짜 리턴!
             return calendarEnd;
+        },
+
+        getBackUpYear : function () { // 월 달력 다시 출력하고자 할 때
+            return backUpYear;
+        },
+
+        getBackUpMonth : function () { // 월 달력 다시 출력하고자 할 때
+            return backUpMonth;
         }
     }
 
@@ -331,7 +312,65 @@ var ajaxFunc = (function () {
         });
     };
 
-    var monthSchedule = function() {
+    var monthSchedule = function(today, tempDay, date) {
+        var view = ''; // 한 주에 하나씩
+        $.ajax({
+            url: 'http://calendar2.kr/calendar/scheduleGet', // 호출할 컨트롤러의 메소드
+            data: { strDate : dateDraw.getCalendarStart(), // mouseEvent에 등록된 일정 시작일과 끝일을 가지고 온다.
+                     endDate : dateDraw.getCalendarEnd() },
+            type: 'post',
+            dataType: 'json',
+            //async: false, // ajax 실행을 동기적으로 하겠다는 의미 (ajax는 비동기적 호출을 위한 함수로 하나의 작업 실행 후 다른 작업이 자동으로 실행되게 된다)
+            success: function (data) {
+                alert("성공");
+                // 7 * 6으로 고정된 달력을 만들도록해보자.
+                for (var i = 1; i <=6; i++) {
+                    for (var j = 1; j <= 7; j++) {
+                        var temp = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+                        if (today == temp) { // 오늘 날짜와 td에 들어갈 날짜가 같으면 (즉, 달력에 뿌려질 날짜가 오늘이면)
+                            view += '<td style="background-color : gray;" data-cal="'+temp+'">';
+                        } else {
+                            view += '<td data-cal="'+temp+'">';
+                        }
+
+                        for (var k = 0; k < data.cal.length; k++) {
+                            if (data.cal[k].start_date == temp) { // 일정이 있는 날이면
+                                view += '<div class="schIn" style="width: 100%; background-color: orange;" data-seq="'+data.cal[k].seq+'">'+ data.cal[k].content +'</div>';
+                            }
+                        }
+
+                        if(tempDay == 0) //요일이 일요일 일때 글씨색을 붉은색으로 한다.
+                        {
+                            view += '<font color="red">'+ temp +'</font></td>';
+                            tempDay++;
+                        }
+                        else if(tempDay == 6) //요일이 토요일 일때 글씨색을 파란색으로 한다.
+                        {
+                            view += '<font color="blue">'+ temp +'</font></td>';
+                            tempDay++;
+                        }
+                        else //평일 일때 글씨색을 검정색으로 한다.
+                        {
+                            view += temp +'</td>';
+                            tempDay++;
+                        }
+
+                        if(tempDay > 6) //테이블의 새로운 행을 추가하도록 한다.
+                        {
+                            tempDay = 0;
+                            view += '</tr>';
+                            view += '<tr>';
+                        }
+                        date.setDate(date.getDate() + 1); // 1일 증가!
+                    }
+                }
+                ajaxFunc.setView(view);
+                alert(view);
+            },
+            error: function () {
+                alert("error");
+            }
+        });
 
     };
 
@@ -398,7 +437,12 @@ var ajaxFunc = (function () {
             view = v;
         },
 
-        getView : function (today, date) {
+        getMonthView : function (today, tempDay, date) {
+            monthSchedule(today, tempDay, date);
+            return view;
+        },
+
+        getWeekView : function (today, date) {
             weekSchedule(today, date);
             return view;
         }

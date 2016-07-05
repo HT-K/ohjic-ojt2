@@ -139,6 +139,8 @@
              ajaxFunc.scheduleInsert(); // ajax 호출
              if (flag == 2) {
                  dateDraw.weekView(dateDraw.getWeekData(), 0);
+             } else {
+                 dateDraw.monthView(dateDraw.getBackUpYear(), dateDraw.getBackUpMonth());
              }
          }); // sch_reg_btn End
 
@@ -147,6 +149,8 @@
              ajaxFunc.scheduleUpdate(); // 업데이트 ajax 호출
              if (flag == 2) {
                  dateDraw.weekView(dateDraw.getWeekData(), 0); // 백업해뒀던 주간 view 뿌리기
+             } else {
+                 dateDraw.monthView(dateDraw.getBackUpYear(), dateDraw.getBackUpMonth());
              }
          });
 
@@ -155,6 +159,8 @@
              ajaxFunc.scheduleDelete(); // 삭제 ajax 호출
              if (flag == 2) {
                  dateDraw.weekView(dateDraw.getWeekData(), 0); // 백업해뒀던 주간 view 뿌리기
+             } else {
+                 dateDraw.monthView(dateDraw.getBackUpYear(), dateDraw.getBackUpMonth());
              }
          });
 
