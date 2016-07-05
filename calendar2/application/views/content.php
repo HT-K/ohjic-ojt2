@@ -41,7 +41,37 @@
                  </form>
              </div>
              <div class="modal-footer">
-                 <button type="button" id="sch_reg_btn" class="btn btn-primary">일정 등록</button>
+                 <button type="button" id="sch_reg_btn" data-flag="add" class="btn btn-primary">일정 등록</button>
+                 <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+             </div>
+         </div>
+     </div>
+ </div>
+
+ <!-- 일정 수정 modal 창 -->
+ <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+     <div class="modal-dialog">
+         <div class="modal-content">
+             <div class="modal-header">
+                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                 <h4 class="modal-title">Schedule Registration</h4>
+             </div>
+             <div class="modal-body">
+                 <form>
+                     <div class="form-group">
+                         <label for="scheduleContent" class="control-label">일정 내용</label>
+                         <input type="text" class="form-control" id="updateContent">
+                     </div>
+                     <div class="form-group" style="padding: 0 0 10px 0;">
+                         <p id="updateStart" style="float: left;"><!--내가 선택한 시작 날짜가 들어가는 곳--></p>
+                         <p style="float: left; padding: 0 5px 0 5px;"> ~ </p>
+                         <p id="updateEnd" style="float: left;"><!-- 내가 선택한 끝 날짜가 들어가는 곳 --></p>
+                     </div>
+                 </form>
+             </div>
+             <div class="modal-footer">
+                 <button type="button" id="updateBtn" class="btn btn-primary">일정 수정</button>
+                 <button type="button" id="deleteBtn" class="btn btn-primary">일정 삭제</button>
                  <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
              </div>
          </div>
@@ -106,19 +136,34 @@
 
          $("#sch_reg_btn").click(function(e){ // '일정 등록' 버튼을 눌렀을 때
              e.preventDefault();
-             ajaxFunc.scheduleInsert(flag); // ajax 호출
+             ajaxFunc.scheduleInsert(); // ajax 호출
+             if (flag == 2) {
+                 dateDraw.weekView(dateDraw.getWeekData(), 0);
+             } else {
+             }
          }); // sch_reg_btn End
+
+         $("#updateBtn").click(function(e){ // 일정 수정 클릭에 이벤트 걸어놓기
+             e.preventDefault();
+             ajaxFunc.scheduleUpdate(); // 업데이트 ajax 호출
+             if (flag == 2) {
+                 dateDraw.weekView(dateDraw.getWeekData(), 0); // 백업해뒀던 주간 view 뿌리기
+             }
+         });
+
+         $("#deleteBtn").click(function(e) {
+             e.preventDefault();
+             ajaxFunc.scheduleDelete(); // 삭제 ajax 호출
+             if (flag == 2) {
+                 dateDraw.weekView(dateDraw.getWeekData(), 0); // 백업해뒀던 주간 view 뿌리기
+             }
+         });
 
          $(".btn").click(function(e) { // 선택됨을 표시한 td 오렌지 배경색을 없애주기 위함
              e.preventDefault();
              $("#scheduleModal").modal('hide'); // 일정 등록이 끝났으면 hide!
              $("#scheduleContent").val(""); // 해당 텍스트 박스 값 바꾸기
              $("#calendar_body tr td").removeClass('selected');
-         });
-
-         $(".schIn").mouseover(function(e){
-             e.preventDefault();
-
          });
 
      });

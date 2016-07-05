@@ -100,7 +100,7 @@ var dateDraw = (function () {
 
         weekView : function(date, week) { // '주' 달력을 그려주기 위한 함수
             date.setDate(date.getDate() + week * 7); // 현재 주간의 시작 '일요일'로 세팅!
-            dateDraw.backUpWeekData(date); // 현재 화면 백업!
+            dateDraw.backUpWeekData(date); // 현재 주간 백업!
             var today = new Date();
             today = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate(); // 현재 날짜에 배경색을 칠하기 위해 미리 구해놓음.
 
@@ -127,9 +127,6 @@ var dateDraw = (function () {
             $("#ym").html(title);
             $("#calendar_body").html(view);
             mouseEvent.init(); // tbody에 마우스 이벤트 연결
-
-
-
         }, //weekView End
 
         backUpWeekData : function(date) {  // 주간 화면을 띄우기 위해 필요한 today, temp 를 백업시켜놓는다.

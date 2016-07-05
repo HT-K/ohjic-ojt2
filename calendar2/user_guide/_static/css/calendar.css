@@ -11,12 +11,12 @@
     border: 1px solid #999999;
 }
 
-.calendar_main td {
-    width: 200px;
-    text-align: center;
-    border-right: 1px solid #999999;
-    border-bottom: 1px solid #999999;
-}
+/*.calendar_main tr td {*/
+    /*width: 200px;*/
+    /*text-align: center;*/
+    /*border-right: 1px solid #999999;*/
+    /*border-bottom: 1px solid #999999;*/
+/*}*/
 
 .calendar_main tr {
     height: 250px;
@@ -28,6 +28,13 @@
 
 #calendar_body tr .ui-selected {
     background: #F39814; color: white;
+}
+
+#calendar_body tr td {
+    width: 200px;
+    text-align: center;
+    border-right: 1px solid #999999;
+    border-bottom: 1px solid #999999;
 }
 
 

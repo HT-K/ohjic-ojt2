@@ -29,8 +29,11 @@
         <button id="today" style="float: left; width: 50px; height: 30px; margin-right: 10px;">오늘</button>
         <button id="prev" style="float: left; width: 35px; height: 30px;"><</button>
         <button id="next" style="float: left; width: 35px; height: 30px;">></button>
-        <div id="ym" style="float: left; width: 270px; height: 30px; text-align: center; margin-top: 5px;">
-
+        <div id="calendarStart" style="float: left; width: 125px; height: 30px; text-align: center; margin:5px 0 0 10px;">
+            <!-- 캘린더 시작일 -->
+        </div>
+        <div id="calendarEnd" style="float: left; width: 120px; height: 30px; text-align: center; margin: 5px 0 0 -5px;">
+            <!-- 캘린더 끝일 -->
         </div>
 
         <button id="month" style="float: right; width: 100px; height: 30px; background-color: #409ad5; margin-left: 10px;">월</button>

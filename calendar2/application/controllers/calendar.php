@@ -57,4 +57,51 @@ class Calendar extends CI_Controller
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
+    public function scheduleGetBySeq()
+    {
+        /* post로 보낸 값을 받는다. */
+        $seq = $this->input->post('seq');
+        $result = $this->CalendarModel->scheduleSelectBySeq($seq); // 해당 일정(글번호)번호로 일정 내용과 시작일, 끝일을 가지고 온다.
+        $ret = array (
+          'sch' => $result
+        );
+
+        echo json_encode($ret, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function scheduleModify()
+    {
+        // post로 보낸 값을 받는다.
+        $seq = $this->input->post('seq');
+        $content = $this->input->post('content');
+        $startDate = $this->input->post('strDate');
+        $endDate = $this->input->post('endDate');
+
+        $this->CalendarModel->scheduleUpdate($seq, $content, $startDate, $endDate);
+
+        $check = "성공";
+
+        $result = array(
+            'check' => $check
+        );
+
+        /* json 으로 encode 하여 .ajax에게 리턴~ (echo를 써줘야한다!) */
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function scheduleDelete()
+    {
+        $seq = $this->input->post('seq');
+        $this->CalendarModel->scheduleDelete($seq);
+
+        $check = "성공";
+
+        $result = array(
+            'check' => $check
+        );
+
+        /* json 으로 encode 하여 .ajax에게 리턴~ (echo를 써줘야한다!) */
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
+
 }
