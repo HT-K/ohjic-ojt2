@@ -246,7 +246,7 @@ var ajaxFunc = (function () {
             type : 'post',
             dataType : 'json',
             success : function(data) {
-                alert(data.check);
+                alert("일정 등록 성공");
             },
             error : function() {
                 alert("error");
@@ -322,19 +322,16 @@ var ajaxFunc = (function () {
             dataType: 'json',
             async: false, // ajax 실행을 동기적으로 하겠다는 의미 (ajax는 비동기적 호출을 위한 함수로 하나의 작업 실행 후 다른 작업이 자동으로 실행되게 된다)
             success: function (data) {
-                alert(dateDraw.getCalendarStart());
-                alert(dateDraw.getCalendarEnd());
-                var idCount = 1;
+                //alert(dateDraw.getCalendarStart());
+                //alert(dateDraw.getCalendarEnd());
                 // 7 * 6으로 고정된 달력을 만들도록해보자.
                 for (var i = 1; i <=6; i++) {
                     for (var j = 1; j <= 7; j++) {
                         var temp = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
                         if (today == temp) { // 오늘 날짜와 td에 들어갈 날짜가 같으면 (즉, 달력에 뿌려질 날짜가 오늘이면)
                             view += '<td style="background-color : gray;" data-cal="'+temp+'">';
-                            idCount++;
                         } else {
                             view += '<td data-cal="'+temp+'">';
-                            idCount++;
                         }
 
                         for (var k = 0; k < data.cal.length; k++) {

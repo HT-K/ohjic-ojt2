@@ -23,9 +23,10 @@ class CalendarModel extends CI_Model
 
         //$query = $this->db->get_where('calendar', array('start_date' => $strDate));
 
-        $sql = "SELECT content as content,
-                        DATE_FORMAT(start_date,'%Y-%m-%d') as start_date,
-                        DATE_FORMAT(end_date,'%Y-%m-%d') as end_date
+        $sql = "SELECT seq as seq,
+                        content as content,
+                        DATE_FORMAT(start_date,'%Y-%c-%e') as start_date,
+                        DATE_FORMAT(end_date,'%Y-%c-%e') as end_date
                 FROM calendar
                 where start_date  between ? and ?";
 

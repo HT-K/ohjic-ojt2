@@ -93,14 +93,14 @@
          $("#month").click(function(e){ // '월' 을 눌렀을 경우
              e.preventDefault();
              flag = 1;
-             date = new Date(); // 현재 시간 구하기
-             dateDraw.monthView(date.getFullYear(), date.getMonth(), 0);
+             var date = new Date(); // 현재 시간 구하기
+             dateDraw.monthView(date.getFullYear(), date.getMonth());
          }); // month End
 
          $("#week").click(function(e){ // '주'를 눌렀을 경우
              e.preventDefault();
              flag = 2;
-             date = new Date(); // 현재 날짜 구하기
+             var date = new Date(); // 현재 날짜 구하기
              date.setDate(date.getDate() - date.getDay()); // 현재 날짜, 그 주간의 '일요일'로 시간을 세팅한다.
              dateDraw.weekView(date, 0); // 첫 주를 구했기 때문에 더할 숫자가 없다.
          }); // week End
