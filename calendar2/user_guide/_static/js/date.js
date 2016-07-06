@@ -123,6 +123,8 @@ var mouseEvent = (function () {
             isDragging = true;
             //console.log($(e.target).data("cal"));
             mouseEvent.setStrDate(e); // 마우스 드래그 시작 날짜 가져오기!!
+            $("body").mouseup(rangeMouseUp); // td에 마우스 다운 이벤트가 들어오면 body에 마우스 업 이벤트를 연결시킨다!
+            
 
             if (typeof e.preventDefault != 'undefined') { e.preventDefault(); }
             document.documentElement.onselectstart = function () { return false; };
@@ -135,11 +137,21 @@ var mouseEvent = (function () {
         } else {
             var allCells = $("#calendar_body tr td");
             dragEnd = allCells.index($(this));
-            mouseEvent.setEndDate(e); // 마우스 드래그 제일 끝 날짜 가져오기!!
+
+            // 거꾸로 드래그할 때를 위해 이 계산이 필요하다.
+            var start = new Date(strDate);
+            var end = new Date(endDate);
+
+            if (start > end) {
+                var temp = strDate;
+                strDate = endDate;
+                endDate = temp;
+            }
 
             $("#scheduleStart").html(strDate); // 해당 기간을 p 태그에 출력!
             $("#scheduleEnd").html(endDate); // 해당 기간을 p 태그에 출력!
             $("#scheduleModal").modal('show'); // show 모달!
+            $("body").off(); // 얘는 th 마우스다운 이벤트 일때만 호출되고 마우스업 후엔 잠깐 지워져야한다.
 
             isDragging = false;
             if (dragEnd != 0) {
@@ -159,6 +171,7 @@ var mouseEvent = (function () {
 
     function selectRange(e) {
         $("#calendar_body tr td").removeClass('selected');
+        mouseEvent.setEndDate(e); // 마우스 드래그 제일 끝 날짜 가져오기!!
         if (dragEnd + 1 < dragStart) { // reverse select
             $("#calendar_body tr td").slice(dragEnd, dragStart + 1).addClass('selected');
         } else {
@@ -198,7 +211,6 @@ var mouseEvent = (function () {
         init: function () { // monthView와 weekView에서 호출해야되므로 public으로!
             $("#calendar_body tr td")
                 .mousedown(rangeMouseDown)
-                .mouseup(rangeMouseUp)
                 .mousemove(rangeMouseMove);
 
             $(".schIn")
@@ -334,27 +346,29 @@ var ajaxFunc = (function () {
                             view += '<td data-cal="'+temp+'">';
                         }
 
+                        if(tempDay == 0) //요일이 일요일 일때 글씨색을 붉은색으로 한다.
+                        {
+                            view += '<font color="red">'+ temp +'</font>';
+                            tempDay++;
+                        }
+                        else if(tempDay == 6) //요일이 토요일 일때 글씨색을 파란색으로 한다.
+                        {
+                            view += '<font color="blue">'+ temp +'</font>';
+                            tempDay++;
+                        }
+                        else //평일 일때 글씨색을 검정색으로 한다.
+                        {
+                            view += temp;
+                            tempDay++;
+                        }
+
                         for (var k = 0; k < data.cal.length; k++) {
                             if (data.cal[k].start_date == temp) { // 일정이 있는 날이면
                                 view += '<div class="schIn" style="width: 100%; background-color: orange;" data-seq="'+data.cal[k].seq+'">'+ data.cal[k].content +'</div>';
                             }
                         }
 
-                        if(tempDay == 0) //요일이 일요일 일때 글씨색을 붉은색으로 한다.
-                        {
-                            view += '<font color="red">'+ temp +'</font></td>';
-                            tempDay++;
-                        }
-                        else if(tempDay == 6) //요일이 토요일 일때 글씨색을 파란색으로 한다.
-                        {
-                            view += '<font color="blue">'+ temp +'</font></td>';
-                            tempDay++;
-                        }
-                        else //평일 일때 글씨색을 검정색으로 한다.
-                        {
-                            view += temp +'</td>';
-                            tempDay++;
-                        }
+                        view += '</td>';
 
                         if(tempDay > 6) //테이블의 새로운 행을 추가하도록 한다.
                         {
@@ -397,13 +411,15 @@ var ajaxFunc = (function () {
                         v += '<td data-cal="'+temp+'">';
                     }
 
+                    v += date.getDate()
+
                     for (var j = 0; j < data.cal.length; j++) {
                         if (data.cal[j].start_date == temp) { // 일정이 있는 날이면
                             v += '<div class="schIn" style="width: 100%; background-color: orange;" data-seq="'+data.cal[j].seq+'">'+ data.cal[j].content +'</div>';
                         }
                     }
 
-                    v += date.getDate() +'</td>';
+                    v += '</td>';
 
                     date.setDate(date.getDate() + 1); // 해당 일 기준으로 다음날로 세팅
                  }

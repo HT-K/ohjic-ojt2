@@ -32,11 +32,10 @@
 
 #calendar_body tr td {
     width: 200px;
-    text-align: center;
+    vertical-align: top;
     border-right: 1px solid #999999;
     border-bottom: 1px solid #999999;
 }
-
 
 #calendar_body td.selected {
     background-color: #FECA40;

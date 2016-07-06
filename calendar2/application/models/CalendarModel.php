@@ -23,6 +23,8 @@ class CalendarModel extends CI_Model
 
         //$query = $this->db->get_where('calendar', array('start_date' => $strDate));
 
+        // %c는 2016-01-01   => 왼쪽 날짜를 2016-1-01 로 인식하게 바꿔주고
+        // %e는 2016-01-01   => 왼쪽 날짜를 2016-01-1 로 인식하게 바꿔준다.
         $sql = "SELECT seq as seq,
                         content as content,
                         DATE_FORMAT(start_date,'%Y-%c-%e') as start_date,
@@ -37,9 +39,7 @@ class CalendarModel extends CI_Model
 
     public function scheduleInsert($content, $startDate, $endDate)
     {
-        //$startDate = DateTime::createFromFormat('Y-m-d', $startDate);
-        //$endDate = DateTime::createFromFormat('Y-m-d', $endDate);
-
+        // $startDate와 endDate 문자열 값을 date 형식으로 바꿔주는 작업이다!
         $startDate = strtotime($startDate);
         $startDate = date('Y-m-d', $startDate);
 
@@ -56,7 +56,17 @@ class CalendarModel extends CI_Model
 
     public function scheduleSelectBySeq($seq)
     {
-        $query = $this->db->get_where('calendar', array('seq' => $seq));
+        //$query = $this->db->get_where('calendar', array('seq' => $seq));
+
+        $sql = "SELECT seq as seq,
+                        content as content,
+                        DATE_FORMAT(start_date,'%Y-%c-%e') as start_date,
+                        DATE_FORMAT(end_date,'%Y-%c-%e') as end_date
+                FROM calendar
+                where seq = ?";
+
+        $query = $this->db->query($sql, array($seq));
+
 
         return $query->result();
     }
