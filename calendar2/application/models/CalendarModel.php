@@ -13,19 +13,38 @@ class CalendarModel extends CI_Model
         parent::__construct();
     }
 
-    public function scheduleSelect($strDate, $endDate)
+    public function scheduleSelect($startDate, $endDate)
     {
+        $startDate = strtotime($startDate);
+        $startDate = date('Y-m-d', $startDate);
+
+        $endDate = strtotime($endDate);
+        $endDate = date('Y-m-d', $endDate);
+
         //$query = $this->db->get_where('calendar', array('start_date' => $strDate));
 
-        $sql = "SELECT * FROM calendar where start_date  between ? and ?";
+        $sql = "SELECT content as content,
+                        DATE_FORMAT(start_date,'%Y-%m-%d') as start_date,
+                        DATE_FORMAT(end_date,'%Y-%m-%d') as end_date
+                FROM calendar
+                where start_date  between ? and ?";
 
-        $query = $this->db->query($sql, array($strDate, $endDate));
+        $query = $this->db->query($sql, array($startDate, $endDate));
 
         return $query->result();
     }
 
     public function scheduleInsert($content, $startDate, $endDate)
     {
+        //$startDate = DateTime::createFromFormat('Y-m-d', $startDate);
+        //$endDate = DateTime::createFromFormat('Y-m-d', $endDate);
+
+        $startDate = strtotime($startDate);
+        $startDate = date('Y-m-d', $startDate);
+
+        $endDate = strtotime($endDate);
+        $endDate = date('Y-m-d', $endDate);
+
         $this->db->set(array(
             'content'=>$content,
             'start_date'=>$startDate,

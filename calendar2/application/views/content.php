@@ -88,7 +88,7 @@
          var date = new Date(); // 현재 시간 구하기, date.js에서 setDate()로 시간 세팅을 하면 이 date 값은 현재 컴퓨터의 시간으로 자동으로 바뀌게 된다.
          var year = date.getFullYear(); // 현재 시간의 '연도'
          var month = date.getMonth(); // 현재 시간의 '달'
-         dateDraw.monthView(year, month, 0);
+         dateDraw.monthView(year, month);
 
          $("#month").click(function(e){ // '월' 을 눌렀을 경우
              e.preventDefault();
@@ -108,9 +108,9 @@
          $('#prev').click(function(e){ // '이전' 버튼 누를 경우
              e.preventDefault();
              if (flag == 1) {
-                 month = month - 1; // 이전이니까 월을 -1
+                 month = dateDraw.getBackUpMonth() - 1; // 이전이니까 월을 -1
                  if (month == -1) { // 현재 년도에서 더이상 이전 할 월이 없으면
-                     year = year - 1;
+                     year = dateDraw.getBackUpYear() - 1;
                      month = 11; // 12월 값이다.
                  }
                  dateDraw.monthView(year, month);
@@ -122,9 +122,9 @@
          $("#next").click(function(e){ // '다음' 버튼 누를 경우
              e.preventDefault();
              if (flag == 1) { // '월' 버튼 클릭 시
-                 month = month + 1;
+                 month = dateDraw.getBackUpMonth() + 1;
                  if (month == 12) {
-                     year = year + 1;
+                     year = dateDraw.getBackUpYear() + 1;
                      month = 0; // 1월 값이다.
                  }
                  dateDraw.monthView(year, month);
