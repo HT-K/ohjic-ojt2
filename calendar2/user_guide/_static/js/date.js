@@ -123,6 +123,7 @@ var mouseEvent = (function () {
             isDragging = true;
             //console.log($(e.target).data("cal"));
             mouseEvent.setStrDate(e); // 마우스 드래그 시작 날짜 가져오기!!
+            mouseEvent.setEndDate(e); // 마우스 드래그 제일 끝 날짜 가져오기!!
             $("body").mouseup(rangeMouseUp); // td에 마우스 다운 이벤트가 들어오면 body에 마우스 업 이벤트를 연결시킨다!
             
 
